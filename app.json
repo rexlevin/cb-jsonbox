@@ -1,0 +1,28 @@
+{
+    "name": "jsonbox",
+    "id": "com.gitee.lizl6.cb-jsonbox",
+    "description": "JsonBox - 跨平台的 JSON 格式化工具",
+    "author": "lizl6",
+    "homepage": "https://gitee.com/lizl6/cb-jsonbox",
+    "main": "index.html",
+    "logo": "public/logo.png",
+    "version": "0.0.1",
+    "window": {
+        "minWidth": 700,
+        "minHeight": 500,
+        "width": 700,
+        "height": 500,
+        "icon": "public/logo.png",
+        "resizable": true,
+        "webPreferences": {
+            "preload": "preload.js"
+        }
+    },
+    "platform": ["windows", "darwin", "linux"],
+    "categories": ["development", "utility"],
+    "tags": ["json", "jsonformatter"],
+    "development": {
+        "main": "http://localhost:5173/",
+        "devTools": "detach"
+    }
+}
