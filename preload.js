@@ -1,4 +1,13 @@
-console.info(appId);
+// const { contextBridge } = require('electron');
+// const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
+const app = require('./app.json');
+
+console.info('here is preload.js');
+window.addEventListener('DOMContentLoaded', () => {
+    document.title = app.description + ' - v' + app.version;
+});
+
+// console.info(appId);
 
 window.api = {
     getBox: (callback) => {
@@ -6,16 +15,7 @@ window.api = {
         // callback(store.get('box') || null);
         callback(null);
     },
-
 };
-// const { contextBridge } = require('electron');
-// const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
-// const app = require('./app.json');
-
-// console.info('hello world');
-// window.addEventListener('DOMContentLoaded', () => {
-//     document.title = app.description + ' - v' + app.version;
-// });
 
 // // // 接收来自主窗口的消息，并作出响应
 // // ipcRenderer.on('getWindowParams', (event) => {
