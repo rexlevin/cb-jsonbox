@@ -1,28 +1,25 @@
-// const { contextBridge } = require('electron');
+const { contextBridge } = require('electron');
 // const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
-const app = require('./app.json');
 
-console.info('here is preload.js');
-window.addEventListener('DOMContentLoaded', () => {
-    document.title = app.description + ' - v' + app.version;
-});
+console.info('here is preload.js, appId: ', appId);    // 即：console.info(window.appId);
+canbox.hello();  // 即：window.canbox.hello();
 
-// console.info(appId);
+contextBridge.exposeInMainWorld(
+    'api', {
+        getBox: (callback) => {
+            // console.info('box from store');
+            console.info('box from store===%o', (canbox.db.get('box') || null));
+            callback(canbox.db.get('box') || null);
+        }
+    }
+);
 
-window.api = {
-    getBox: (callback) => {
-        // console.info('box from store===%o', (store.get('box') || null));
-        // callback(store.get('box') || null);
-        callback(null);
-    },
-};
-
-// // // 接收来自主窗口的消息，并作出响应
-// // ipcRenderer.on('getWindowParams', (event) => {
-// //     let isMax = store.get('isMax') === 'true';
-// //     let position = store.get('position');
-// //     event.sender.send('window-params-reply', isMax, position);
-// // });
+// // 接收来自主窗口的消息，并作出响应
+// ipcRenderer.on('getWindowParams', (event) => {
+//     let isMax = store.get('isMax') === 'true';
+//     let position = store.get('position');
+//     event.sender.send('window-params-reply', isMax, position);
+// });
 
 // contextBridge.exposeInMainWorld(
 //     'api', {

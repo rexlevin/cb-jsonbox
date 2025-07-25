@@ -83,6 +83,7 @@ self.MonacoEnvironment = {
 };
 
 onBeforeMount(() => {
+    // console.log(window);
     // 从存储中查询 boxes 数据
     window.api.getBox(res => {
         box.value = res || null;
