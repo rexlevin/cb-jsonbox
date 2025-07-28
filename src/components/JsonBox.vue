@@ -82,11 +82,13 @@ self.MonacoEnvironment = {
     }
 };
 
+let isGetBoxCalled = false; // 确保只调用一次getBox，避免报错
 onBeforeMount(() => {
-    // console.log(window);
+    if (isGetBoxCalled) return;
+    isGetBoxCalled = true;
     // 从存储中查询 boxes 数据
     window.api.getBox(res => {
-        box.value = res || null;
+        console.info('store====res=%o', res);
         if (res) {
             box.value = res;
             return;
@@ -96,6 +98,8 @@ onBeforeMount(() => {
         let j = Object.assign({}, tmpJ);
         box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
         box.value.activeId = id;
+        console.info(box);
+        console.info(box.value);
     });
 });
 
@@ -132,23 +136,23 @@ onMounted(() => {
     
     // window.api.closeTab(() => closeTab());
     // window.api.newTab(() => createTab());
-    window.api.closeApp((event, isMax, position) => {
-        console.info('editor===%o',editorInstance);
-        // console.info(JSON.stringify(event));
-        console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
-        // 把当前的数据存入box
-        for (let j of box.value.data) {
-            if(j.id === box.value.activeId) {
-                j.content = editorInstance.getValue();
-                break;
-            }
-        }
-        console.info('box=====%o', box.value);
-        // 把box数据存入store
-        window.api.saveBox(JSON.stringify(box.value));
-        window.api.savePosition(isMax, position);
-        window.api.closeAppReply();
-    });
+    // window.api.closeApp((event, isMax, position) => {
+    //     console.info('editor===%o',editorInstance);
+    //     // console.info(JSON.stringify(event));
+    //     console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
+    //     // 把当前的数据存入box
+    //     for (let j of box.value.data) {
+    //         if(j.id === box.value.activeId) {
+    //             j.content = editorInstance.getValue();
+    //             break;
+    //         }
+    //     }
+    //     console.info('box=====%o', box.value);
+    //     // 把box数据存入store
+    //     window.api.saveBox(JSON.stringify(box.value));
+    //     window.api.savePosition(isMax, position);
+    //     window.api.closeAppReply();
+    // });
 
 
 });
