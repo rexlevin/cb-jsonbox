@@ -33,13 +33,17 @@ contextBridge.exposeInMainWorld(
         // ipcRenderer.send('openWindow', url, name, options);
     },
     saveBox: (box) => {
-        console.info('%s box saved in saveBox===%o', box);
         canbox.db.get({_id: 'box'}).then(res => {
+            console.info('now can get box %s, update it', res._rev);
             canbox.db.put({
                 _id: 'box',
                 box,
                 _rev: res._rev
-            });
+            }).then(res => {
+                console.info('update db box ok: %o', res)
+            }).catch(err => {
+                console.info('err in update db %o', err)
+            });;
         }).catch(err => {
             console.info('err in get===%o, now add a new record to db', err);
             canbox.db.put({
@@ -49,13 +53,14 @@ contextBridge.exposeInMainWorld(
         });
     },
     getBox: (callback) => {
-        canbox.db.get({_id: 'box'}).then(data => {
-            console.info('data from db===%o', data);
-            callback(data.box);
-        }).catch(err => {
-            console.info('err in getBox===%o', err);
-            callback(null);
-        });
+        let ret = canbox.db.getSync({_id: 'box'});
+        callback(ret?.box || null);
+        // canbox.db.get({_id: 'box'}).then(data => {
+        //     callback(data.box);
+        // }).catch(err => {
+        //     console.info('err in getBox===%o', err);
+        //     callback(null);
+        // });
     },
     sid: () => {
         const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
@@ -66,12 +71,5 @@ contextBridge.exposeInMainWorld(
     },
     saveSettings: () => {},
     getSettings: (fn) => {
-    },
-    closeApp(fn) {
-        console.info('now close app');
-        // ipcRenderer.on('closeApp', fn);
-    },
-    closeAppReply() {
-        // ipcRenderer.send('close-reply', 'ok');
     }
 });

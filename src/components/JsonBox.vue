@@ -56,14 +56,7 @@ const tmpBox = {
     data: []
 };
 
-const j = Object.assign({}, tmpJ);
-
 const box = ref({ data: [] });
-
-// 立即调用 getBox
-window.api.getBox(res => {
-    if (res) box.value = JSON.parse(res);
-});
 
 // 监听键盘事件
 const handleKeydown = (event) => {
@@ -106,8 +99,6 @@ onBeforeMount(() => {
         let j = Object.assign({}, tmpJ);
         box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
         box.value.activeId = id;
-        console.info(box);
-        console.info(box.value);
     });
 });
 
@@ -130,7 +121,6 @@ onMounted(() => {
         console.info('box=====%o', box.value);
         // 立即保存（跳过防抖）
         window.api.saveBox(JSON.stringify(box.value));
-        window.api.closeAppReply();
     });
 
     editorInstance = monaco.editor.create(document.querySelector('.editor'), {
