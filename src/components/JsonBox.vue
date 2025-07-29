@@ -32,6 +32,7 @@
 <script setup>
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
+import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'simple-ui/src/ui.css';
 
@@ -57,7 +58,12 @@ const tmpBox = {
 
 const j = Object.assign({}, tmpJ);
 
-const box = ref(null);
+const box = ref({ data: [] });
+
+// 立即调用 getBox
+window.api.getBox(res => {
+    if (res) box.value = JSON.parse(res);
+});
 
 // 监听键盘事件
 const handleKeydown = (event) => {
@@ -82,15 +88,17 @@ self.MonacoEnvironment = {
     }
 };
 
-let isGetBoxCalled = false; // 确保只调用一次getBox，避免报错
+let isGetBoxCalled = false;
 onBeforeMount(() => {
+    console.info('box === %o', box);
     if (isGetBoxCalled) return;
     isGetBoxCalled = true;
     // 从存储中查询 boxes 数据
     window.api.getBox(res => {
         console.info('store====res=%o', res);
         if (res) {
-            box.value = res;
+            box.value = JSON.parse(res);
+            console.info(box.value.data);
             return;
         }
         box.value = Object.assign({}, tmpBox);
@@ -107,6 +115,23 @@ let editorInstance = ref(null);
 onMounted(() => {
     // 挂载键盘监听
     window.addEventListener('keydown', handleKeydown);
+    // 关闭事件
+    window.addEventListener('beforeunload', (e) => {
+        console.info('editor===%o',editorInstance);
+        // console.info(JSON.stringify(event));
+        console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
+        // 把当前的数据存入box
+        for (let j of box.value.data) {
+            if(j.id === box.value.activeId) {
+                j.content = editorInstance.getValue();
+                break;
+            }
+        }
+        console.info('box=====%o', box.value);
+        // 立即保存（跳过防抖）
+        window.api.saveBox(JSON.stringify(box.value));
+        window.api.closeAppReply();
+    });
 
     editorInstance = monaco.editor.create(document.querySelector('.editor'), {
         value: '',
@@ -127,9 +152,16 @@ onMounted(() => {
     editorInstance.onDidFocusEditorWidget(() => {
         hidePlaceholder();
     });
+    const saveBoxDebounced = debounce((boxData) => {
+        window.api.saveBox(JSON.stringify(boxData));
+    }, 1000);
+
     editorInstance.onDidChangeModelContent(() => {
-        // 这是editor的onchange事件
-        // console.info('当前内容===%s', editorInstance.getValue());
+        const activeTab = box.value.data.find(tab => tab.id === box.value.activeId);
+        if (activeTab) {
+            activeTab.content = editorInstance.getValue();
+            saveBoxDebounced(box.value);
+        }
     });
 
     init();

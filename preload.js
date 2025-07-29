@@ -4,8 +4,7 @@ const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，�
 const path = require('path');
 const app = require(path.join(__dirname, 'app.json'));
 
-console.info('here is preload.js, appId: ', appId);    // 即：console.info(window.appId);
-canbox.hello();  // 即：window.canbox.hello();
+canbox.hello();
 
 window.addEventListener('DOMContentLoaded', () => {
     document.title = app.description + ' - v' + app.version;
@@ -14,8 +13,6 @@ window.addEventListener('DOMContentLoaded', () => {
 // window.addEventListener('beforeunload', (e) => {
 //     e.preventDefault();
 // });
-
-const rev = '';
 
 contextBridge.exposeInMainWorld(
     'api', {
@@ -36,28 +33,25 @@ contextBridge.exposeInMainWorld(
         // ipcRenderer.send('openWindow', url, name, options);
     },
     saveBox: (box) => {
-        // store.set('box', JSON.parse(box));
-        canbox.db.put({
-            _id: 'box',
-            box,
-            rev
-        }).then(res => {
-            console.info('res in put===%o', res);
+        console.info('%s box saved in saveBox===%o', box);
+        canbox.db.get({_id: 'box'}).then(res => {
+            canbox.db.put({
+                _id: 'box',
+                box,
+                _rev: res._rev
+            });
         }).catch(err => {
-            console.info('err in put===%o', err);
+            console.info('err in get===%o, now add a new record to db', err);
+            canbox.db.put({
+                _id: 'box',
+                box
+            });
         });
     },
-    savePosition(isMax, position) {
-        store.set('isMax', isMax);
-        store.set('position', position);
-        return;
-    },
     getBox: (callback) => {
-        console.trace('getBox called from:');
         canbox.db.get({_id: 'box'}).then(data => {
             console.info('data from db===%o', data);
-            rev = data._rev;
-            callback(data);
+            callback(data.box);
         }).catch(err => {
             console.info('err in getBox===%o', err);
             callback(null);
