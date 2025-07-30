@@ -231,6 +231,8 @@ function closeTab() {
         box.value.data[0].content = '';
         editorInstance.setValue('');
         console.info('关闭后只剩下一个空白页了');
+        // 保存box
+        window.api.saveBox(JSON.stringify(box.value));
         return;
     }
     let currentId = box.value.activeId;
@@ -249,6 +251,8 @@ function closeTab() {
         }
     }
     console.info('closeTab后的box==', box);
+    // 保存box
+    window.api.saveBox(JSON.stringify(box.value));
 }
 
 function switchTab(id) {
