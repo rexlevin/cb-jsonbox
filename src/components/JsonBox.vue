@@ -106,7 +106,7 @@ let editorInstance = ref(null);
 onMounted(() => {
     // 挂载键盘监听
     window.addEventListener('keydown', handleKeydown);
-    // 关闭事件
+    // 窗口关闭事件
     window.addEventListener('beforeunload', (e) => {
         console.info('editor===%o',editorInstance);
         // console.info(JSON.stringify(event));
@@ -146,13 +146,23 @@ onMounted(() => {
         window.api.saveBox(JSON.stringify(boxData));
     }, 1000);
 
+    let isUserModified = false;
     editorInstance.onDidChangeModelContent(() => {
+        if (!isUserModified) return; // 非用户修改时跳过保存
         const activeTab = box.value.data.find(tab => tab.id === box.value.activeId);
         if (activeTab) {
             activeTab.content = editorInstance.getValue();
             saveBoxDebounced(box.value);
         }
     });
+
+    // 切换标签页时临时禁用保存
+    const originalSetValue = editorInstance.setValue;
+    editorInstance.setValue = function(value) {
+        isUserModified = false;
+        originalSetValue.call(this, value);
+        isUserModified = true;
+    };
 
     init();
     
@@ -267,24 +277,11 @@ function switchTab(id) {
 }
 
 function init() {
-    // if(null == box.value.activeId) {
-    //     let id = window.api.sid();
-    //     box.value.activeId = id;
-    //     let j = Object.assign({}, tmpJ);
-    //     box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
-    //     editorInstance.setValue(box.value.data[0].content);
-    //     hidePlaceholder();
-    // } else {
-        for (let t of box.value.data) {
-            if(t.id === box.value.activeId) {
-                editorInstance.setValue(t.content);
-                if(''!= t.content) {
-                    hidePlaceholder();
-                }
-                break;
-            }
-        }
-    // }
+    const target = box.value.data.find(t => t.id === box.value.activeId);
+    if (target) {
+        editorInstance.setValue(target.content);
+        if (target.content !== '') hidePlaceholder();
+    }
 }
 
 function openSettings() {

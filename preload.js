@@ -43,7 +43,7 @@ contextBridge.exposeInMainWorld(
                 console.info('update db box ok: %o', res)
             }).catch(err => {
                 console.info('err in update db %o', err)
-            });;
+            });
         }).catch(err => {
             console.info('err in get===%o, now add a new record to db', err);
             canbox.db.put({
