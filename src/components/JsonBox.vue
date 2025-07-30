@@ -165,28 +165,6 @@ onMounted(() => {
     };
 
     init();
-    
-    // window.api.closeTab(() => closeTab());
-    // window.api.newTab(() => createTab());
-    // window.api.closeApp((event, isMax, position) => {
-    //     console.info('editor===%o',editorInstance);
-    //     // console.info(JSON.stringify(event));
-    //     console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
-    //     // 把当前的数据存入box
-    //     for (let j of box.value.data) {
-    //         if(j.id === box.value.activeId) {
-    //             j.content = editorInstance.getValue();
-    //             break;
-    //         }
-    //     }
-    //     console.info('box=====%o', box.value);
-    //     // 把box数据存入store
-    //     window.api.saveBox(JSON.stringify(box.value));
-    //     window.api.savePosition(isMax, position);
-    //     window.api.closeAppReply();
-    // });
-
-
 });
 
 // 组件卸载时解绑事件
