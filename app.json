@@ -20,9 +20,5 @@
     },
     "platform": ["windows", "darwin", "linux"],
     "categories": ["development", "utility"],
-    "tags": ["json", "jsonformatter"],
-    "development": {
-        "main": "http://localhost:5173/",
-        "devTools": "detach"
-    }
+    "tags": ["json", "jsonformatter"]
 }
