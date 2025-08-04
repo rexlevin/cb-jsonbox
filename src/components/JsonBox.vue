@@ -34,7 +34,7 @@ import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import 'simple-ui/src/ui.css';
+import '../lib/simple-ui/ui.css';
 
 import X2js from 'x2js';
 import * as Yaml from "../lib/json.yaml";
