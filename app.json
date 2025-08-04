@@ -12,7 +12,7 @@
         "minHeight": 800,
         "width": 700,
         "height": 800,
-        "icon": "public/logo.png",
+        "icon": "logo.png",
         "resizable": true,
         "webPreferences": {
             "preload": "preload.js"
