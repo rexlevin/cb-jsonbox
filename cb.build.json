@@ -1,0 +1,13 @@
+{
+    "files": [
+        "build/**/*",
+        "public/**/*",
+        "preload.js",
+        "index.html",
+        "logo.png",
+        "node_modules/"
+    ],
+    "directories": {
+        "output": "./dist"
+    }
+}
