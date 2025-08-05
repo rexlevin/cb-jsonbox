@@ -4,7 +4,7 @@
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
     "author": "lizl6",
     "homepage": "https://gitee.com/lizl6/cb-jsonbox",
-    "main": "index.html",
+    "main": "build/index.html",
     "logo": "logo.png",
     "version": "0.0.1",
     "window": {

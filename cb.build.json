@@ -1,13 +1,10 @@
 {
     "files": [
-        "build/**/*",
-        "public/**/*",
+        "build/",
         "preload.js",
-        "index.html",
         "logo.png",
-        "node_modules/"
+        "app.json",
+        "README.md"
     ],
-    "directories": {
-        "output": "./dist"
-    }
+    "outputDir": "./dist"
 }

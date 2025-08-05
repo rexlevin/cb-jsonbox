@@ -34,13 +34,12 @@ import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import '../lib/simple-ui/ui.css';
+import '@/lib/simple-ui/ui.css';
 
 import X2js from 'x2js';
-import * as Yaml from "../lib/json.yaml";
-import * as FormatXml from "../lib/format.xml";
+import * as Yaml from "@/lib/json.yaml";
+import * as FormatXml from "@/lib/format.xml";
 
-//import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
 const tmpJ = {
