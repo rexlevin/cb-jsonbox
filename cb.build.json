@@ -1,6 +1,6 @@
 {
     "files": [
-        "build/",
+        "build/**/*",
         "preload.js",
         "logo.png",
         "app.json",
