@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld(
     openWindow: (url, name, options) => {
         console.info('openWindow, url=%s, name=%s, option=%o', url, name, options);
         // ipcRenderer.send('openWindow', url, name, options);
+        canbox.win.createWindow(options);
     },
     saveBox: (box) => {
         canbox.db.get({_id: 'box'}).then(res => {
@@ -69,7 +70,6 @@ contextBridge.exposeInMainWorld(
     saveWindowState: (isMax, mainPosition) => {
         console.info(isMax, mainPosition);
     },
-    saveSettings: () => {},
     getSettings: (fn) => {
     }
 });
