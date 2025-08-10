@@ -31,7 +31,9 @@ contextBridge.exposeInMainWorld(
     openWindow: (url, name, options) => {
         console.info('openWindow, url=%s, name=%s, option=%o', url, name, options);
         // ipcRenderer.send('openWindow', url, name, options);
-        canbox.win.createWindow(options);
+        const win = canbox.win.createWindow(options);
+        console.info(win);
+        return win;
     },
     saveBox: (box) => {
         canbox.db.get({_id: 'box'}).then(res => {

@@ -267,15 +267,20 @@ function init() {
 
 function openSettings() {
     let options = {
-        width: 800,
-        height: 600,
-        resizable: false,
+        width: 400,
+        height: 300,
+        resizabled: false
         // webPreferences: {
         //     nodeIntegration: true,
         //     contextIsolation: false
         // }
     };
-    window.api.openWindow('index.html#/settings', 'settings', JSON.stringify(options));
+    window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
+        console.info(win);
+        win.loadURL('index.html#/settings');
+    }).catch(err => {
+        console.error(err);
+    });
 }
 
 function copy(name) {
