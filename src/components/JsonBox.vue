@@ -209,8 +209,14 @@ function closeTab() {
         editorInstance.setValue('');
         console.info('关闭后只剩下一个空白页了');
         // 保存box
-        window.api.saveBox(JSON.stringify(box.value));
-        return;
+        window.api.saveBox(JSON.stringify(box.value))
+            .then(() => {
+                return;
+            })
+            .catch(err => {
+                console.error('保存失败:', err);
+                return;
+            });
     }
     let currentId = box.value.activeId;
     for(let i = 0; i < box.value.data.length; i++) {

@@ -36,22 +36,27 @@ contextBridge.exposeInMainWorld(
         return win;
     },
     saveBox: (box) => {
-        canbox.db.get({_id: 'box'}).then(res => {
-            console.info('now can get box %s, update it', res._rev);
-            canbox.db.put({
-                _id: 'box',
-                box,
-                _rev: res._rev
-            }).then(res => {
-                console.info('update db box ok: %o', res)
+        return new Promise((resolve, reject) => {
+            canbox.db.get({_id: 'box'}).then(res => {
+                console.info('now can get box %s, update it', res._rev);
+                canbox.db.put({
+                    _id: 'box',
+                    _rev: res._rev,
+                    data: box
+                }).then(() => {
+                    console.info('update db box ok: %o', res)
+                    resolve();
+                }).catch(err => {
+                    console.info('err in update db %o', err)
+                    reject(err);
+                });
             }).catch(err => {
-                console.info('err in update db %o', err)
-            });
-        }).catch(err => {
-            console.info('err in get===%o, now add a new record to db', err);
-            canbox.db.put({
-                _id: 'box',
-                box
+                console.info('err in get===%o, now add a new record to db', err);
+                canbox.db.put({
+                    _id: 'box',
+                    box
+                });
+                // reject(err);
             });
         });
     },
