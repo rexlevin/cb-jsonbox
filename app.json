@@ -9,9 +9,9 @@
     "version": "0.0.1",
     "window": {
         "minWidth": 700,
-        "minHeight": 800,
+        "minHeight": 500,
         "width": 700,
-        "height": 800,
+        "height": 500,
         "icon": "logo.png",
         "resizable": true,
         "webPreferences": {

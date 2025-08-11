@@ -42,7 +42,7 @@ contextBridge.exposeInMainWorld(
                 canbox.db.put({
                     _id: 'box',
                     _rev: res._rev,
-                    data: box
+                    box
                 }).then(() => {
                     console.info('update db box ok: %o', res)
                     resolve();
