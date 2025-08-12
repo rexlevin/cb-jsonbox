@@ -145,13 +145,17 @@ onMounted(() => {
         window.api.saveBox(JSON.stringify(boxData));
     }, 1000);
 
+    // 监听 box.value 的变化
+    watch(box, (newValue) => {
+        saveBoxDebounced(newValue);
+    }, { deep: true });
+
     let isUserModified = false;
     editorInstance.onDidChangeModelContent(() => {
         if (!isUserModified) return; // 非用户修改时跳过保存
         const activeTab = box.value.data.find(tab => tab.id === box.value.activeId);
         if (activeTab) {
             activeTab.content = editorInstance.getValue();
-            saveBoxDebounced(box.value);
         }
     });
 
@@ -171,6 +175,9 @@ onUnmounted(() => {
     // 移除keydown监听
     window.removeEventListener('keydown', handleKeydown);
 });
+
+// 导入 watch
+import { watch } from 'vue';
 
 function showPlaceholder(value) {
     if (value === '') {
@@ -208,15 +215,6 @@ function closeTab() {
         box.value.data[0].content = '';
         editorInstance.setValue('');
         console.info('关闭后只剩下一个空白页了');
-        // 保存box
-        window.api.saveBox(JSON.stringify(box.value))
-            .then(() => {
-                return;
-            })
-            .catch(err => {
-                console.error('保存失败:', err);
-                return;
-            });
     }
     let currentId = box.value.activeId;
     for(let i = 0; i < box.value.data.length; i++) {
@@ -234,8 +232,6 @@ function closeTab() {
         }
     }
     console.info('closeTab后的box==', box);
-    // 保存box
-    window.api.saveBox(JSON.stringify(box.value));
 }
 
 function switchTab(id) {
