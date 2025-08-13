@@ -141,8 +141,12 @@ onMounted(() => {
     editorInstance.onDidFocusEditorWidget(() => {
         hidePlaceholder();
     });
+    let lastBoxData = null;
     const saveBoxDebounced = debounce((boxData) => {
-        window.api.saveBox(JSON.stringify(boxData));
+        if (JSON.stringify(boxData) !== JSON.stringify(lastBoxData)) {
+            lastBoxData = boxData;
+            window.api.saveBox(JSON.stringify(boxData));
+        }
     }, 1000);
 
     // 监听 box.value 的变化
