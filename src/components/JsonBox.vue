@@ -219,6 +219,7 @@ function closeTab() {
         box.value.data[0].content = '';
         editorInstance.setValue('');
         console.info('关闭后只剩下一个空白页了');
+        return;
     }
     let currentId = box.value.activeId;
     for(let i = 0; i < box.value.data.length; i++) {
