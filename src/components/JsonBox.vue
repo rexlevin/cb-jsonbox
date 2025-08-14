@@ -276,18 +276,19 @@ function openSettings() {
     let options = {
         width: 400,
         height: 300,
-        resizabled: false
+        resizable: false
         // webPreferences: {
         //     nodeIntegration: true,
         //     contextIsolation: false
         // }
     };
-    window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
-        console.info(win);
-        win.loadURL('index.html#/settings');
-    }).catch(err => {
-        console.error(err);
-    });
+    window.api.openWindow(options, 'index.html#/settings', true);
+    // window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
+    //     console.info(win);
+    //     win.loadURL('index.html#/settings');
+    // }).catch(err => {
+    //     console.error(err);
+    // });
 }
 
 function copy(name) {

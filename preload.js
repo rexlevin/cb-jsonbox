@@ -28,12 +28,16 @@ contextBridge.exposeInMainWorld(
     openDevTools: () => {
         // ipcRenderer.send('openDevTools');
     },
-    openWindow: (url, name, options) => {
-        console.info('openWindow, url=%s, name=%s, option=%o', url, name, options);
-        // ipcRenderer.send('openWindow', url, name, options);
-        const win = canbox.win.createWindow(options);
-        console.info(win);
-        return win;
+    openWindow: (options, url, devTools) => {
+        console.info('openWindow, url=%s, devTools=%s, option=%o', url, devTools, options);
+        canbox.win.createWindow(options, url, devTools).then((res) => {
+            console.info('res===', res);
+        }, (err) => {
+            console.info('err===', err);
+        });
+        // const win = canbox.win.createWindow(options);
+        // console.info(win);
+        // return win;
     },
     saveBox: (box) => {
         return new Promise((resolve, reject) => {
@@ -74,9 +78,9 @@ contextBridge.exposeInMainWorld(
         const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
         return nanoid();
     },
-    saveWindowState: (isMax, mainPosition) => {
-        console.info(isMax, mainPosition);
-    },
+    // saveWindowState: (isMax, mainPosition) => {
+    //     console.info(isMax, mainPosition);
+    // },
     getSettings: (fn) => {
     }
 });
