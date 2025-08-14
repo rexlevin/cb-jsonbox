@@ -282,7 +282,7 @@ function openSettings() {
         //     contextIsolation: false
         // }
     };
-    window.api.openWindow(options, 'index.html#/settings', true);
+    window.api.openWindow(options, '#/settings', true);
     // window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
     //     console.info(win);
     //     win.loadURL('index.html#/settings');
