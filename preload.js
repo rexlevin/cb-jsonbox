@@ -28,9 +28,10 @@ contextBridge.exposeInMainWorld(
     openDevTools: () => {
         // ipcRenderer.send('openDevTools');
     },
-    openWindow: (options, url, devTools) => {
-        console.info('openWindow, url=%s, devTools=%s, option=%o', url, devTools, options);
-        canbox.win.createWindow(options, url, devTools).then((res) => {
+    openWindow: (options, params) => {
+        console.info('openWindow, options=%o', options);
+        console.info('openWindow, params=%o', params);
+        canbox.win.createWindow(options, params).then((res) => {
             console.info('res===', res);
         }, (err) => {
             console.info('err===', err);

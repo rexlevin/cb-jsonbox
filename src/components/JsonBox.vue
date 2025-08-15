@@ -273,7 +273,7 @@ function init() {
 }
 
 function openSettings() {
-    let options = {
+    const options = {
         width: 400,
         height: 300,
         resizable: false
@@ -282,7 +282,11 @@ function openSettings() {
         //     contextIsolation: false
         // }
     };
-    window.api.openWindow(options, '#/settings', true);
+    const params = {
+        url: '#/settings',
+        title: '设置'
+    };
+    window.api.openWindow(options, params);
     // window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
     //     console.info(win);
     //     win.loadURL('index.html#/settings');
