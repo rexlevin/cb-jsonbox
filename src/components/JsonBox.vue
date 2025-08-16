@@ -274,8 +274,8 @@ function init() {
 
 function openSettings() {
     const options = {
-        width: 400,
-        height: 300,
+        width: 450,
+        height: 400,
         resizable: false
         // webPreferences: {
         //     nodeIntegration: true,
