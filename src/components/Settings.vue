@@ -59,6 +59,11 @@ export default {
     height: 100%;
 }
 
+.el-tab-pane {
+    height: calc(100%);
+    overflow-y: auto;
+}
+
 .about-content {
     padding: 20px;
     max-height: 400px;
