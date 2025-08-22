@@ -1,5 +1,5 @@
 {
-    "name": "jsonbox",
+    "name": "cb-jsonbox",
     "id": "com.gitee.lizl6.cb-jsonbox",
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
     "author": "lizl6",
