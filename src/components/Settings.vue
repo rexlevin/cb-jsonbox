@@ -33,20 +33,15 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'Settings',
-    data() {
-        return {
-            saveSession: false,
-            restoreWindowState: false,
-            shortcuts: [
-                { key: 'Ctrl+T', description: '新建标签页' },
-                { key: 'Ctrl+W', description: '关闭当前标签页' },
-            ],
-        };
-    },
-};
+<script setup>
+import { ref } from 'vue';
+
+const saveSession = ref(false);
+const restoreWindowState = ref(false);
+const shortcuts = ref([
+    { key: 'Ctrl+T', description: '新建标签页' },
+    { key: 'Ctrl+W', description: '关闭当前标签页' },
+]);
 </script>
 
 <style scoped>

@@ -276,7 +276,8 @@ function openSettings() {
     const options = {
         width: 450,
         height: 300,
-        resizable: false
+        resizable: false,
+        modal: true
         // webPreferences: {
         //     nodeIntegration: true,
         //     contextIsolation: false
@@ -284,7 +285,8 @@ function openSettings() {
     };
     const params = {
         url: '#/settings',
-        title: '设置'
+        title: '设置',
+        escClose: true
     };
     window.api.openWindow(options, params);
     // window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
