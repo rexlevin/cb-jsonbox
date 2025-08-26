@@ -6,7 +6,7 @@
     "homepage": "https://gitee.com/lizl6/cb-jsonbox",
     "main": "build/index.html",
     "logo": "logo.png",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "window": {
         "minWidth": 350,
         "minHeight": 200,
