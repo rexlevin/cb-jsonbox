@@ -60,17 +60,21 @@ const box = ref({ data: [] });
 // 监听键盘事件
 const handleKeydown = (event) => {
     // console.info(event);
-    if (event.altKey && event.key === 's') {
-        // window.open('index.html#/settings', '_blank', 'resizable=false');
-        openSettings();
-    } else if (event.ctrlKey && event.key === 't') {
-        createTab();
-    } else if (event.ctrlKey && event.key === 'w') {
-        closeTab();
-    } else if(event.ctrlKey && event.key == 'r') {
-        window.api.reload();
-    } else if (event.altKey && event.shiftKey && (event.key === 'i' || event.key === 'I')) {
-        window.api.openDevTools();
+    const keyActions = {
+        'alt+s': openSettings,
+        'ctrl+t': createTab,
+        'ctrl+w': closeTab
+    };
+
+    const keyCombination = [
+        event.altKey ? 'alt' : '',
+        event.ctrlKey ? 'ctrl' : '',
+        event.key.toLowerCase()
+    ].filter(Boolean).join('+');
+
+    const action = keyActions[keyCombination];
+    if (action) {
+        action();
     }
 };
 
@@ -289,12 +293,6 @@ function openSettings() {
         escClose: true
     };
     window.api.openWindow(options, params);
-    // window.api.openWindow('index.html#/settings', 'settings', options).then(win => {
-    //     console.info(win);
-    //     win.loadURL('index.html#/settings');
-    // }).catch(err => {
-    //     console.error(err);
-    // });
 }
 
 function copy(name) {

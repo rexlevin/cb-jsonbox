@@ -22,12 +22,6 @@ contextBridge.exposeInMainWorld(
         }, options);
         new window.Notification(title, options);
     },
-    reload: () => {
-        // ipcRenderer.send('reload');
-    },
-    openDevTools: () => {
-        // ipcRenderer.send('openDevTools');
-    },
     openWindow: (options, params) => {
         console.info('openWindow, options=%o', options);
         console.info('openWindow, params=%o', params);
