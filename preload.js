@@ -10,17 +10,16 @@ window.addEventListener('DOMContentLoaded', () => {
     document.title = app.description + ' - v' + app.version;
 });
 
-// window.addEventListener('beforeunload', (e) => {
-//     e.preventDefault();
-// });
-
 contextBridge.exposeInMainWorld(
     'api', {
-    notification: (title, options) => {
-        options = Object.assign({
-            icon: path.join(__dirname, 'logo.png'),
-        }, options);
-        new window.Notification(title, options);
+    notification: (title, opt) => {
+        const options = {...opt, icon: path.join(__dirname, 'logo.png')};
+        // new window.Notification(title, options);
+        canbox.win.notification({title, body: options.body}).then(()=>{
+            console.log('通知已成功发送');
+        }).catch(err=>{
+            console.error('err in notification===%o', err);
+        });
     },
     openWindow: (options, params) => {
         console.info('openWindow, options=%o', options);
@@ -30,9 +29,6 @@ contextBridge.exposeInMainWorld(
         }, (err) => {
             console.info('err===', err);
         });
-        // const win = canbox.win.createWindow(options);
-        // console.info(win);
-        // return win;
     },
     saveBox: (box) => {
         return new Promise((resolve, reject) => {

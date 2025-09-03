@@ -260,9 +260,7 @@ function switchTab(id) {
             // console.info('t=========%o', t);
             box.value.activeId = t.id;
             editorInstance.setValue(t.content);
-            if('' != t.content) {
-                hidePlaceholder();
-            }
+            t.content && hidePlaceholder();
             break;
         }
     }
@@ -296,27 +294,31 @@ function openSettings() {
 }
 
 function copy(name) {
-    console.info(name);
-    let re;
+    console.info('now copy to clipboard: ', name);
     const handlers = {
         'minify': function(jsonObj) {
-            re = JSON.stringify(jsonObj);
+            return JSON.stringify(jsonObj);
         },
         'xml': function(jsonObj) {
             var x2js = new X2js({
                 useDoubleQuotes: true
             });
-            re = x2js.js2xml(jsonObj)
-            re = FormatXml.formatXml(re);
+            let tmp = x2js.js2xml(jsonObj)
+            return FormatXml.formatXml(tmp);
         },
         'yaml': function(jsonObj) {
-            re = Yaml.j2y(jsonObj);
+            return Yaml.j2y(jsonObj);
         }
     };
-    handlers[name](JSON.parse(editorInstance.getValue()));
+    const re = handlers[name](JSON.parse(editorInstance.getValue()));
     // console.info(re);
-    navigator.clipboard.writeText(re);
-    window.api.notification('复制成功', {body: `${name}格式内容已经复制到剪贴板`});
+    navigator.clipboard.writeText(re).then(() => {
+        console.info(`${name}格式内容复制成功`);
+        window.api.notification('复制成功', {body: `${name}格式内容已经复制到剪贴板`});
+    }).catch((err) => {
+        console.error(err);
+        window.api.notification('复制失败', {body: `${name}格式内容复制失败`});
+    });
 }
 </script>
 
