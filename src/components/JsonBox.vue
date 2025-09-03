@@ -147,9 +147,12 @@ onMounted(() => {
     });
     let lastBoxData = null;
     const saveBoxDebounced = debounce((boxData) => {
-        if (JSON.stringify(boxData) !== JSON.stringify(lastBoxData)) {
-            lastBoxData = boxData;
+        const currentBoxData = JSON.stringify(boxData);
+        const lastBoxDataStr = lastBoxData ? JSON.stringify(lastBoxData) : null;
+        if (currentBoxData !== lastBoxDataStr) {
+            lastBoxData = JSON.parse(currentBoxData); // 深拷贝
             window.api.saveBox(JSON.stringify(boxData));
+        } else {
         }
     }, 1000);
 
