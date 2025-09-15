@@ -2,12 +2,13 @@
     "compilerOptions": {
         "allowJs": true,
         "checkJs": false,
+        "noEmit": true,   // 仅进行类型检查，不生成输出文件（JS项目无需编译）
+        "strict": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
         "maxNodeModuleJsDepth": 0,
         "target": "es6",
         "module": "commonjs",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "typeRoots": ["./types", "./node_modules/@types"]
     },
