@@ -19,10 +19,6 @@
                         <span>项目主页：</span>
                         <a href="https://gitee.com/lizl6/cb-jsonbox" target="_blank">https://gitee.com/lizl6/cb-jsonbox</a>
                     </div>
-                    <div class="link-item">
-                        <span>代码仓库：</span>
-                        <a href="https://gitee.com/lizl6/cb-jsonbox-pages" target="_blank">https://gitee.com/lizl6/cb-jsonbox-pages</a>
-                    </div>
                     <div class="donation">
                         <span>给小可爱买一杯咖啡：</span>
                         <img src="@/assets/payment-qrcode.png" alt="支付二维码" />
