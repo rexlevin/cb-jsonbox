@@ -1,132 +1,33 @@
-// 定义 window.canbox 的类型
+// 定义 window.api 的类型（新架构，canbox-core IPC 通道）
 export {}; // 确保文件被识别为模块
 declare global {
     interface Window {
-        canbox: {
+        api: {
             /**
-             * 钩子对象
+             * 发送系统通知
+             * @param title - 通知标题
+             * @param opt - 通知选项（body 为正文）
              */
-            hooks: Record<string, any>;
-
-            /**
-             * 示例方法
-             */
-            hello: () => void;
+            notification: (title: string, opt?: { body?: string }) => void;
 
             /**
-             * 数据库操作模块
+             * 保存会话数据（JSON 字符串）
+             * @param box - JSON.stringify 后的会话数据
+             * @returns Promise<void>
              */
-            db: {
-                /**
-                 * 插入数据
-                 * @param param - 插入的数据
-                 * @returns Promise<any>
-                 */
-                put: (param: any) => Promise<any>;
-
-                /**
-                 * 批量插入数据
-                 * @param docs - 批量插入的数据
-                 * @returns Promise<any>
-                 */
-                bulkDocs: (docs: any[]) => Promise<any>;
-
-                /**
-                 * 查询数据
-                 * @param param - 查询条件
-                 * @returns Promise<any>
-                 */
-                get: (param: any) => Promise<any>;
-
-                /**
-                 * 同步查询数据
-                 * @param param - 查询条件
-                 * @returns any
-                 */
-                getSync: (param: any) => any;
-
-                /**
-                 * 删除数据
-                 * @param param - 删除条件
-                 * @returns Promise<any>
-                 */
-                remove: (param: any) => Promise<any>;
-            };
+            saveBox: (box: string) => Promise<void>;
 
             /**
-             * 窗口操作模块
+             * 读取会话数据
+             * @param callback - 回调，参数为会话 JSON 字符串或 null
              */
-            win: {
-                /**
-                 * 创建窗口
-                 * @param options - 窗口配置
-                 * @param params - 其他参数
-                 * @returns Promise<any>
-                 */
-                createWindow: (options: any, params: any) => Promise<any>;
-
-                /**
-                 * 发送通知
-                 * @param options - 通知配置
-                 * @returns Promise<void>
-                 */
-                notification: (options: any) => Promise<void>;
-            };
+            getBox: (callback: (box: string | null) => void) => void;
 
             /**
-             * 对话框模块
+             * 生成 8 位短 id
+             * @returns string
              */
-            dialog: {
-                /**
-                 * 打开文件对话框
-                 * @param options - 对话框配置
-                 * @returns Promise<any>
-                 */
-                openFile: (options: any) => Promise<any>;
-
-                /**
-                 * 保存文件对话框
-                 * @param options - 对话框配置
-                 * @returns Promise<any>
-                 */
-                saveFile: (options: any) => Promise<any>;
-            };
-
-            /**
-             * 本地存储模块
-             */
-            store: {
-                /**
-                 * 获取存储的值
-                 * @param key - 存储的键
-                 * @returns Promise<any>
-                 */
-                get: (key: string) => Promise<any>;
-
-                /**
-                 * 设置存储的值
-                 * @param key - 存储的键
-                 * @param value - 存储的值
-                 * @returns Promise<void>
-                 */
-                set: (key: string, value: any) => Promise<void>;
-
-                /**
-                 * 删除存储的值
-                 * @param key - 存储的键
-                 * @returns Promise<void>
-                 */
-                delete: (key: string) => Promise<void>;
-
-                /**
-                 * 清空存储
-                 * @returns Promise<void>
-                 */
-                clear: () => Promise<void>;
-            };
+            sid: () => string;
         };
     }
-
-    // 定义全局变量 canbox
-    const canbox: Window['canbox'];
 }

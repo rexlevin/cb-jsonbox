@@ -1,5 +1,8 @@
 <template>
     <div class="settings-container">
+        <div class="settings-header">
+            <el-button text @click="back">&larr; 返回</el-button>
+        </div>
         <el-tabs tab-position="left" class="settings-tabs">
             <!-- <el-tab-pane label="常用">
                 <div class="common-settings">
@@ -31,8 +34,14 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const saveSession = ref(false);
+
+function back() {
+    router.push('/');
+}
 const restoreWindowState = ref(false);
 const shortcuts = ref([
     { key: 'Ctrl+T', description: '新建标签页' },
@@ -44,6 +53,11 @@ const shortcuts = ref([
 .settings-container {
     height: 100%;
     user-select:none;
+}
+
+.settings-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
 .settings-tabs {

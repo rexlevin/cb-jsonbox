@@ -2,10 +2,17 @@
     "name": "cb-jsonbox",
     "private": true,
     "version": "0.0.3",
+    "description": "JsonBox - 跨平台的 JSON 格式化工具",
+    "author": "lizl6",
+    "license": "Apache-2.0",
+    "homepage": "https://gitee.com/lizl6/cb-jsonbox",
+    "main": "main.js",
+    "keywords": ["json", "jsonformatter", "development", "utility"],
     "scripts": {
         "dev": "vite --port 5173",
         "build": "vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "start": "NODE_ENV=development electron -r /depot/cargo/canbox-core/injection.js . --no-sandbox"
     },
     "dependencies": {
         "bootstrap-icons": "^1.10.3",
@@ -19,6 +26,7 @@
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.0",
+        "electron": "^41.2.1",
         "typescript": "^5.9.2",
         "vite": "^7.0.0"
     }

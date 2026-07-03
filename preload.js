@@ -1,77 +1,57 @@
-const { contextBridge } = require('electron');
-const { customAlphabet } = require('nanoid');    // nanoid是内部的函数，记得要加{}包起来，否则报错nanoid is not a function
-// console.info('__dirname: ', __dirname);
+/**
+ * cb-jsonbox preload
+ *
+ * 新架构下通过 ipcRenderer.invoke 调用 canbox-core 提供的 IPC 通道，
+ * 再用 contextBridge 暴露给渲染进程。
+ *
+ * 对外暴露的 window.api 方法签名保持与旧架构一致，前端组件无需改动：
+ * - notification(title, opt)  系统通知（canbox.window.notification）
+ * - saveBox(box)              保存会话（canbox.store.set）
+ * - getBox(callback)          读取会话（canbox.store.get）
+ * - sid()                     生成短 id（nanoid，不依赖 core）
+ */
+const { contextBridge, ipcRenderer } = require('electron');
+const { customAlphabet } = require('nanoid');
 const path = require('path');
-const app = require(path.join(__dirname, 'app.json'));
+const pkg = require(path.join(__dirname, 'package.json'));
 
-canbox.hello();
-
-window.addEventListener('DOMContentLoaded', () => {
-    document.title = app.description + ' - v' + app.version;
+// 校验 canbox-core 是否已通过 -r injection.js 注入
+ipcRenderer.invoke('canbox.misc.hello').then(() => {
+    console.log('[cb-jsonbox preload] canbox-core 已加载');
+}).catch(err => {
+    console.error('[cb-jsonbox preload] canbox-core 未加载: %o', err);
 });
 
-contextBridge.exposeInMainWorld(
-    'api', {
+window.addEventListener('DOMContentLoaded', () => {
+    document.title = pkg.description + ' - v' + pkg.version;
+});
+
+contextBridge.exposeInMainWorld('api', {
     notification: (title, opt) => {
-        const options = {...opt, icon: path.join(__dirname, 'logo.png')};
-        // new window.Notification(title, options);
-        canbox.win.notification({title, body: options.body}).then(()=>{
-            console.log('通知已成功发送');
-        }).catch(err=>{
-            console.error('err in notification===%o', err);
-        });
-    },
-    openWindow: (options, params) => {
-        console.info('openWindow, options=%o', options);
-        console.info('openWindow, params=%o', params);
-        canbox.win.createWindow(options, params).then((res) => {
-            console.info('res===', res);
-        }, (err) => {
-            console.info('err===', err);
+        const options = {
+            title,
+            body: opt && opt.body,
+            icon: path.join(__dirname, 'logo.png')
+        };
+        ipcRenderer.invoke('canbox.window.notification', options).then(() => {
+            console.log('[cb-jsonbox preload] 通知已成功发送');
+        }).catch(err => {
+            console.error('[cb-jsonbox preload] 通知发送失败: %o', err);
         });
     },
     saveBox: (box) => {
-        return new Promise((resolve, reject) => {
-            canbox.db.get({_id: 'box'}).then(res => {
-                console.info('now can get box %s, update it', res._rev);
-                canbox.db.put({
-                    _id: 'box',
-                    _rev: res._rev,
-                    box
-                }).then(() => {
-                    console.info('update db box ok: %o', res)
-                    resolve();
-                }).catch(err => {
-                    console.info('err in update db %o', err)
-                    reject(err);
-                });
-            }).catch(err => {
-                console.info('err in get===%o, now add a new record to db', err);
-                canbox.db.put({
-                    _id: 'box',
-                    box
-                });
-                // reject(err);
-            });
-        });
+        return ipcRenderer.invoke('canbox.store.set', 'jsonbox', 'box', box);
     },
     getBox: (callback) => {
-        let ret = canbox.db.getSync({_id: 'box'});
-        callback(ret?.box || null);
-        // canbox.db.get({_id: 'box'}).then(data => {
-        //     callback(data.box);
-        // }).catch(err => {
-        //     console.info('err in getBox===%o', err);
-        //     callback(null);
-        // });
+        ipcRenderer.invoke('canbox.store.get', 'jsonbox', 'box').then(ret => {
+            callback(ret || null);
+        }).catch(err => {
+            console.error('[cb-jsonbox preload] getBox 失败: %o', err);
+            callback(null);
+        });
     },
     sid: () => {
-        const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8)
+        const nanoid = customAlphabet('23456789ABDEFGHJLMNQRTY', 8);
         return nanoid();
-    },
-    // saveWindowState: (isMax, mainPosition) => {
-    //     console.info(isMax, mainPosition);
-    // },
-    getSettings: (fn) => {
     }
 });

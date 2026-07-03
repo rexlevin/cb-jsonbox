@@ -32,6 +32,7 @@
 <script setup>
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import '@/lib/simple-ui/ui.css';
@@ -56,6 +57,7 @@ const tmpBox = {
 };
 
 const box = ref({ data: [] });
+const router = useRouter();
 
 // 监听键盘事件
 const handleKeydown = (event) => {
@@ -278,22 +280,7 @@ function init() {
 }
 
 function openSettings() {
-    const options = {
-        width: 450,
-        height: 300,
-        resizable: false,
-        modal: true
-        // webPreferences: {
-        //     nodeIntegration: true,
-        //     contextIsolation: false
-        // }
-    };
-    const params = {
-        url: '#/settings',
-        title: '设置',
-        escClose: true
-    };
-    window.api.openWindow(options, params);
+    router.push('/settings');
 }
 
 function copy(name) {
