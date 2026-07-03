@@ -40,10 +40,10 @@ contextBridge.exposeInMainWorld('api', {
         });
     },
     saveBox: (box) => {
-        return ipcRenderer.invoke('canbox.store.set', 'jsonbox', 'box', box);
+        return ipcRenderer.invoke('canbox.store.set', 'session', 'box', box);
     },
     getBox: (callback) => {
-        ipcRenderer.invoke('canbox.store.get', 'jsonbox', 'box').then(ret => {
+        ipcRenderer.invoke('canbox.store.get', 'session', 'box').then(ret => {
             callback(ret || null);
         }).catch(err => {
             console.error('[cb-jsonbox preload] getBox 失败: %o', err);
