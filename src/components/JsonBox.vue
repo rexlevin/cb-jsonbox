@@ -96,7 +96,12 @@ onBeforeMount(() => {
         console.info('store====res=%o', res);
         if (res) {
             box.value = JSON.parse(res);
+            window.__boxDataForSave = res;
             console.info(box.value.data);
+            // editor 可能已创建（onMounted 先于 getBox 回调），重新加载 active tab 内容
+            if (editorInstance && editorInstance.setValue) {
+                init();
+            }
             return;
         }
         box.value = Object.assign({}, tmpBox);
@@ -104,6 +109,7 @@ onBeforeMount(() => {
         let j = Object.assign({}, tmpJ);
         box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
         box.value.activeId = id;
+        window.__boxDataForSave = JSON.stringify(box.value);
     });
 });
 
@@ -111,23 +117,6 @@ let editorInstance = ref(null);
 onMounted(() => {
     // 挂载键盘监听
     window.addEventListener('keydown', handleKeydown);
-    // 窗口关闭事件
-    window.addEventListener('beforeunload', (e) => {
-        console.info('editor===%o',editorInstance);
-        // console.info(JSON.stringify(event));
-        console.info('关闭窗口====isMax：%o, position：%o', isMax, position);
-        // 把当前的数据存入box
-        for (let j of box.value.data) {
-            if(j.id === box.value.activeId) {
-                j.content = editorInstance.getValue();
-                break;
-            }
-        }
-        console.info('box=====%o', box.value);
-        // 立即保存（跳过防抖）
-        window.api.saveBox(JSON.stringify(box.value));
-    });
-
     editorInstance = monaco.editor.create(document.querySelector('.editor'), {
         value: '',
         language: 'json',
@@ -158,10 +147,11 @@ onMounted(() => {
         }
     }, 1000);
 
-    // 监听 box.value 的变化
+    // 监听 box 变化：同步更新 window.__boxDataForSave（供主进程 close 时读取）+ 防抖异步保存
     watch(box, (newValue) => {
+        window.__boxDataForSave = JSON.stringify(newValue);
         saveBoxDebounced(newValue);
-    }, { deep: true });
+    }, { deep: true, flush: 'sync' });
 
     let isUserModified = false;
     editorInstance.onDidChangeModelContent(() => {
