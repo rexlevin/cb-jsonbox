@@ -1,18 +1,21 @@
 {
     "name": "cb-jsonbox",
+    "id": "com.github.rexlevin.cb-jsonbox",
     "private": true,
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
-    "author": "lizl6",
+    "author": "rexlevin",
     "license": "Apache-2.0",
-    "homepage": "https://gitee.com/lizl6/cb-jsonbox",
+    "homepage": "https://github.com/rexlevin/cb-jsonbox",
     "main": "main.js",
+    "logo": "logo.png",
     "keywords": ["json", "jsonformatter", "development", "utility"],
     "scripts": {
         "dev": "vite --port 5173",
         "build": "vite build",
         "preview": "vite preview",
-        "start": "NODE_ENV=development electron -r /depot/cargo/canbox-core/injection.js . --app-id=cb-jsonbox --no-sandbox"
+        "start": "NODE_ENV=development electron -r /depot/cargo/canbox-core/injection.js . --app-id=cb-jsonbox --no-sandbox",
+        "dist": "electron-builder --dir"
     },
     "dependencies": {
         "bootstrap-icons": "^1.10.3",
@@ -29,5 +32,21 @@
         "electron": "^41.2.1",
         "typescript": "^5.9.2",
         "vite": "^7.0.0"
+    },
+    "build": {
+        "appId": "com.github.rexlevin.cb-jsonbox",
+        "electronVersion": "41.2.1",
+        "asar": true,
+        "files": [
+            "build/**/*",
+            "main.js",
+            "preload.js",
+            "logo.png",
+            "package.json"
+        ],
+        "directories": {
+            "output": "dist"
+        },
+        "target": "dir"
     }
 }
