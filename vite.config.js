@@ -13,15 +13,6 @@ export default defineConfig({
     plugins: [vue()],
     build: {
         outDir: 'build',
-        chunkSizeWarningLimit: 5000,
-        rollupOptions: {
-            output: {
-                manualChunks: {
-                    'monaco': ['monaco-editor'],
-                    'element-plus': ['element-plus'],
-                    'vue': ['vue', 'vue-router']
-                }
-            }
-        }
+        chunkSizeWarningLimit: 5000
     }
 })
