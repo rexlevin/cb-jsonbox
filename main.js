@@ -17,7 +17,7 @@ function createWindow() {
     // 从 core store 读取上次窗口状态
     const CORE_PATH = global.__CANBOX_CORE_PATH__;
     const store = require(path.join(CORE_PATH, 'lib', 'store'));
-    const winStateStore = store.getStore('cb-jsonbox', 'winState', path.join(global.__CANBOX_ENV__.usersPath, 'data'));
+    const winStateStore = store.getStore(global.__CANBOX_ENV__.appId, 'winState', path.join(global.__CANBOX_ENV__.usersPath, 'data'));
     const savedBounds = winStateStore.get('bounds');
 
     mainWindow = new BrowserWindow({
@@ -58,7 +58,7 @@ function createWindow() {
             `window.__boxDataForSave || null`
         ).then(boxData => {
             if (boxData) {
-                const sessionStore = store.getStore('cb-jsonbox', 'session', path.join(global.__CANBOX_ENV__.usersPath, 'data'));
+                const sessionStore = store.getStore(global.__CANBOX_ENV__.appId, 'session', path.join(global.__CANBOX_ENV__.usersPath, 'data'));
                 sessionStore.set('box', boxData);
             }
         }).catch(() => {
