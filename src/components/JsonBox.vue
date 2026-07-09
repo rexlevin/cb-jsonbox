@@ -59,6 +59,10 @@ const tmpBox = {
 const box = ref({ data: [] });
 const router = useRouter();
 
+// 定期兜底保存相关
+let periodicSaveTimer = null;
+let lastPeriodicSaved = null;
+
 // 监听键盘事件
 const handleKeydown = (event) => {
     // console.info(event);
@@ -110,6 +114,10 @@ onBeforeMount(() => {
         box.value.data.push(Object.assign(j, {id: id, title: "NewTab 0"}));
         box.value.activeId = id;
         window.__boxDataForSave = JSON.stringify(box.value);
+        // 首次创建默认 tab 后也需 init，确保 editor 内容与 activeTab 同步
+        if (editorInstance && editorInstance.setValue) {
+            init();
+        }
     });
 });
 
@@ -153,30 +161,37 @@ onMounted(() => {
         saveBoxDebounced(newValue);
     }, { deep: true, flush: 'sync' });
 
-    let isUserModified = false;
     editorInstance.onDidChangeModelContent(() => {
-        if (!isUserModified) return; // 非用户修改时跳过保存
+        // 不再依赖 isUserModified 标志区分用户输入与程序设置：
+        // setValue 设置的就是 activeTab.content，写回相同值不会触发 watch（字符串相等），
+        // 因此直接同步 editor 内容到 activeTab 即可，避免标志时序竞态导致用户输入丢失
         const activeTab = box.value.data.find(tab => tab.id === box.value.activeId);
         if (activeTab) {
             activeTab.content = editorInstance.getValue();
         }
     });
 
-    // 切换标签页时临时禁用保存
-    const originalSetValue = editorInstance.setValue;
-    editorInstance.setValue = function(value) {
-        isUserModified = false;
-        originalSetValue.call(this, value);
-        isUserModified = true;
-    };
-
     init();
+
+    // 定期兜底保存：每 5 秒检查数据变化并保存，防止 close 时 executeJavaScript 失败导致丢失
+    periodicSaveTimer = setInterval(() => {
+        const current = window.__boxDataForSave;
+        if (current && current !== lastPeriodicSaved) {
+            lastPeriodicSaved = current;
+            window.api.saveBox(current);
+        }
+    }, 5000);
 });
 
 // 组件卸载时解绑事件
 onUnmounted(() => {
     // 移除keydown监听
     window.removeEventListener('keydown', handleKeydown);
+    // 清理定期保存定时器
+    if (periodicSaveTimer) {
+        clearInterval(periodicSaveTimer);
+        periodicSaveTimer = null;
+    }
 });
 
 // 导入 watch
@@ -316,7 +331,7 @@ footer { background-color: rgb(245, 245, 248);}
     height:35px; width: 100%;
     display: grid;
     grid-template-columns: 50px auto 300px;
-    
+
 }
 .btngroup{
     width: 100%; height: 100%; display: flex;

@@ -54,20 +54,28 @@ function createWindow() {
         winStateStore.set('bounds', bounds);
 
         // 2. 通过 executeJavaScript 读取渲染进程的 box 数据并保存
-        mainWindow.webContents.executeJavaScript(
+        //    加 2 秒超时，防止渲染进程无响应时窗口无法关闭
+        const readPromise = mainWindow.webContents.executeJavaScript(
             `window.__boxDataForSave || null`
-        ).then(boxData => {
-            if (boxData) {
-                const sessionStore = store.getStore(global.__CANBOX_ENV__.appId, 'session', path.join(global.__CANBOX_ENV__.usersPath, 'data'));
-                sessionStore.set('box', boxData);
-            }
-        }).catch(() => {
-            // 忽略读取失败
-        }).finally(() => {
-            // 解除 close 监听，真正关闭
-            mainWindow.removeAllListeners('close');
-            mainWindow.close();
-        });
+        );
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('executeJavaScript timeout')), 2000)
+        );
+
+        Promise.race([readPromise, timeoutPromise])
+            .then(boxData => {
+                if (boxData) {
+                    const sessionStore = store.getStore(global.__CANBOX_ENV__.appId, 'session', path.join(global.__CANBOX_ENV__.usersPath, 'data'));
+                    sessionStore.set('box', boxData);
+                    console.log('[cb-jsonbox] close: box data saved');
+                }
+            }).catch(err => {
+                console.error('[cb-jsonbox] close: save box data failed:', err.message);
+            }).finally(() => {
+                // 解除 close 监听，真正关闭
+                mainWindow.removeAllListeners('close');
+                mainWindow.close();
+            });
     });
 }
 
