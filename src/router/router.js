@@ -8,11 +8,6 @@ const router = createRouter({
             name: 'home',
             component: () => import('../components/JsonBox.vue')
         },
-        // {
-        //     path: '/about',
-        //     name: 'about',
-        //     component: () => import('@/components/About.vue')
-        // },
         {
             path: '/settings',
             name: 'settings',

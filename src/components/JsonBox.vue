@@ -35,7 +35,6 @@ import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import '@/lib/simple-ui/ui.css';
 
 import X2js from 'x2js';
 import * as Yaml from "@/lib/json.yaml";
@@ -258,16 +257,13 @@ function switchTab(id) {
     console.info('currentId==%s\nnewId====%s', currentId, id);
     console.info('box.value.data=====%o', box.value.data);
     for(let t of box.value.data) {
-        // console.info('tttttt==%o', t);
         if(t.id === currentId) {
             t.content = editorInstance.getValue();
             break;
         }
     }
-    // console.info('content==%s', editorInstance.getValue());
     for(let t of box.value.data) {
         if(t.id === id) {
-            // console.info('t=========%o', t);
             box.value.activeId = t.id;
             editorInstance.setValue(t.content);
             t.content && hidePlaceholder();

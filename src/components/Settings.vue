@@ -37,12 +37,10 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const saveSession = ref(false);
 
 function back() {
     router.push('/');
 }
-const restoreWindowState = ref(false);
 const shortcuts = ref([
     { key: 'Ctrl+T', description: '新建标签页' },
     { key: 'Ctrl+W', description: '关闭当前标签页' },
