@@ -1,6 +1,6 @@
 # JSONBox
 
-![logo_128x128.png](logo_128x128.png)
+![logo](public/logo-128.png)
 
 [English](./README.md)
 
