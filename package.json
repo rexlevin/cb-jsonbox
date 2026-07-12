@@ -14,6 +14,7 @@
         "dev": "vite --port 5173",
         "build": "vite build",
         "preview": "vite preview",
+        "dist": "electron-builder --linux dir",
         "start": "NODE_ENV=development electron -r /depot/cargo/canbox-core/injection.js . --app-id=cb-jsonbox --no-sandbox"
     },
     "dependencies": {
