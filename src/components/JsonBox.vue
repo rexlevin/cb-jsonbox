@@ -62,9 +62,48 @@ const router = useRouter();
 let periodicSaveTimer = null;
 let lastPeriodicSaved = null;
 
+// 编辑器字体缩放
+const DEFAULT_FONT_SIZE = 17;
+const MIN_FONT_SIZE = 8;
+const MAX_FONT_SIZE = 40;
+let currentFontSize = DEFAULT_FONT_SIZE;
+
+function zoomIn() {
+    currentFontSize = Math.min(MAX_FONT_SIZE, currentFontSize + 1);
+    editorInstance.updateOptions({ fontSize: currentFontSize });
+}
+
+function zoomOut() {
+    currentFontSize = Math.max(MIN_FONT_SIZE, currentFontSize - 1);
+    editorInstance.updateOptions({ fontSize: currentFontSize });
+}
+
+function zoomReset() {
+    currentFontSize = DEFAULT_FONT_SIZE;
+    editorInstance.updateOptions({ fontSize: currentFontSize });
+}
+
 // 监听键盘事件
 const handleKeydown = (event) => {
     // console.info(event);
+
+    // Zoom 快捷键（Ctrl++ 放大、Ctrl+- 缩小、Ctrl+0 重置）
+    if (event.ctrlKey && (event.key === '+' || event.key === '=')) {
+        event.preventDefault();
+        zoomIn();
+        return;
+    }
+    if (event.ctrlKey && event.key === '-') {
+        event.preventDefault();
+        zoomOut();
+        return;
+    }
+    if (event.ctrlKey && event.key === '0') {
+        event.preventDefault();
+        zoomReset();
+        return;
+    }
+
     const keyActions = {
         'alt+s': openSettings,
         'ctrl+t': createTab,
