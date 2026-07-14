@@ -5,13 +5,21 @@
  *   electron -r canbox-core/injection.js cb-jsonbox/
  *
  * canbox-core 负责环境初始化（统一 userData、日志）与公共服务 IPC
- *（store/db/window 等），本文件只负责创建窗口并加载前端页面。
+ *（store/db/misc），本文件负责创建窗口并加载前端页面。
+ * 系统通知等 Electron 原生能力由 APP 自身注册，不再依赖 canbox-core。
  */
 
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, Notification } = require('electron');
 const path = require('path');
 
 let mainWindow = null;
+
+// 系统通知（APP 自有，非 canbox-core 提供）
+ipcMain.handle('jsonbox.notification', (_e, options) => {
+    const n = new Notification(options);
+    n.show();
+    return { success: true };
+});
 
 function createWindow() {
     // 从 core store 读取上次窗口状态

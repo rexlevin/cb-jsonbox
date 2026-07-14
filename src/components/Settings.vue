@@ -19,6 +19,9 @@
             <el-tab-pane label="关于">
                 <div class="about-content">
                     <div class="link-item">
+                        <span>当前版本：v{{ version }}</span>
+                    </div>
+                    <div class="link-item">
                         <span>项目主页：</span>
                         <a href="https://gitee.com/lizl6/cb-jsonbox" target="_blank">https://gitee.com/lizl6/cb-jsonbox</a>
                     </div>
@@ -33,17 +36,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
+import { version } from '../../package.json';
 
 const router = useRouter();
 
 function back() {
     router.push('/');
 }
+
+// ESC 返回主界面
+const handleKeydown = (event) => {
+    if (event.key === 'Escape') {
+        back();
+    }
+};
+
+onMounted(() => {
+    window.addEventListener('keydown', handleKeydown);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeydown);
+});
+
 const shortcuts = ref([
+    { key: 'Alt+S', description: '打开设置页' },
     { key: 'Ctrl+T', description: '新建标签页' },
     { key: 'Ctrl+W', description: '关闭当前标签页' },
+    { key: 'ESC', description: '设置页中返回主界面' },
 ]);
 </script>
 
