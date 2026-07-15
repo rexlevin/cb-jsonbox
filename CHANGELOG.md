@@ -4,6 +4,36 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
+## [0.0.7] - 2026-07-15
+
+### feat | 新功能 / Features
+
+添加编辑器字体缩放快捷键（Ctrl++/-/0）
+优化设置页面体验
+添加界面整体缩放快捷键（Ctrl++/-/0），缩放作用于整个界面而非仅编辑器
+
+Add editor font zoom shortcuts (Ctrl++/-/0)
+Improve settings page experience
+Add full-interface zoom shortcuts (Ctrl++/-/0), zoom applies to entire UI instead of editor only
+
+### fix | 问题修复 / Bug Fixes
+
+修复 GitHub Release 页面不显示 CHANGELOG 内容的问题
+
+Fix GitHub Release page not showing CHANGELOG content
+
+### refactor | 重构 / Refactoring
+
+将设置页面改为弹层对话框，外部链接改用系统浏览器打开
+
+Convert settings page to a modal dialog, open external links in system browser
+
+### style | 样式 / Styling
+
+为 JsonBox 组件添加标签页样式
+
+Add tab styling for JsonBox component
+
 ## [0.0.6] - 2026-07-12
 
 ### feat | 新功能 / Features
