@@ -65,9 +65,9 @@ const shortcuts = ref([
     { key: 'Alt+S', description: '打开设置页' },
     { key: 'Ctrl+T', description: '新建标签页' },
     { key: 'Ctrl+W', description: '关闭当前标签页' },
-    { key: 'Ctrl++', description: '放大编辑器字体' },
-    { key: 'Ctrl+-', description: '缩小编辑器字体' },
-    { key: 'Ctrl+0', description: '重置编辑器字体' },
+    { key: 'Ctrl++', description: '放大界面' },
+    { key: 'Ctrl+-', description: '缩小界面' },
+    { key: 'Ctrl+0', description: '重置缩放' },
     { key: 'ESC', description: '设置页中返回主界面' },
 ]);
 </script>
