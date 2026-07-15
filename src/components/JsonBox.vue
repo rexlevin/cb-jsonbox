@@ -27,15 +27,16 @@
             </div>
         </footer>
     </div>
+    <Settings v-if="showSettings" @close="closeSettings" />
 </template>
 
 <script setup>
 import * as monaco from 'monaco-editor';
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import Settings from './Settings.vue';
 import X2js from 'x2js';
 import * as Yaml from "@/lib/json.yaml";
 import * as FormatXml from "@/lib/format.xml";
@@ -56,7 +57,7 @@ const tmpBox = {
 };
 
 const box = ref({ data: [] });
-const router = useRouter();
+const showSettings = ref(false);
 
 // 定期兜底保存相关
 let periodicSaveTimer = null;
@@ -90,7 +91,11 @@ function zoomReset() {
 
 // 监听键盘事件
 const handleKeydown = (event) => {
-    // console.info(event);
+    // 设置弹层打开时，ESC 关闭弹层
+    if (showSettings.value && event.key === 'Escape') {
+        closeSettings();
+        return;
+    }
 
     // Zoom 快捷键（Ctrl++ 放大、Ctrl+- 缩小、Ctrl+0 重置）
     if (event.ctrlKey && (event.key === '+' || event.key === '=')) {
@@ -325,7 +330,11 @@ function init() {
 }
 
 function openSettings() {
-    router.push('/settings');
+    showSettings.value = true;
+}
+
+function closeSettings() {
+    showSettings.value = false;
 }
 
 function copy(name) {

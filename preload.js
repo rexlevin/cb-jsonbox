@@ -9,7 +9,7 @@
  * - getBox(callback)          读取会话（canbox.store.get，canbox-core 提供）
  * - sid()                     生成短 id（nanoid，不依赖 core）
  */
-const { contextBridge, ipcRenderer, webFrame } = require('electron');
+const { contextBridge, ipcRenderer, webFrame, shell } = require('electron');
 const { customAlphabet } = require('nanoid');
 const path = require('path');
 const pkg = require(path.join(__dirname, 'package.json'));
@@ -55,5 +55,8 @@ contextBridge.exposeInMainWorld('api', {
     },
     setZoom: (factor) => {
         webFrame.setZoomFactor(factor);
+    },
+    openExternal: (url) => {
+        shell.openExternal(url);
     }
 });
