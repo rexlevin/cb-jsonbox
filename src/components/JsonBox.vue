@@ -62,25 +62,30 @@ const router = useRouter();
 let periodicSaveTimer = null;
 let lastPeriodicSaved = null;
 
-// 编辑器字体缩放
-const DEFAULT_FONT_SIZE = 17;
-const MIN_FONT_SIZE = 8;
-const MAX_FONT_SIZE = 40;
-let currentFontSize = DEFAULT_FONT_SIZE;
+// 界面缩放（整体）
+const DEFAULT_ZOOM = 1;
+const MIN_ZOOM = 0.5;
+const MAX_ZOOM = 2;
+const ZOOM_STEP = 0.1;
+let currentZoom = DEFAULT_ZOOM;
+
+function applyZoom() {
+    window.api.setZoom(currentZoom);
+}
 
 function zoomIn() {
-    currentFontSize = Math.min(MAX_FONT_SIZE, currentFontSize + 1);
-    editorInstance.updateOptions({ fontSize: currentFontSize });
+    currentZoom = Math.min(MAX_ZOOM, +(currentZoom + ZOOM_STEP).toFixed(2));
+    applyZoom();
 }
 
 function zoomOut() {
-    currentFontSize = Math.max(MIN_FONT_SIZE, currentFontSize - 1);
-    editorInstance.updateOptions({ fontSize: currentFontSize });
+    currentZoom = Math.max(MIN_ZOOM, +(currentZoom - ZOOM_STEP).toFixed(2));
+    applyZoom();
 }
 
 function zoomReset() {
-    currentFontSize = DEFAULT_FONT_SIZE;
-    editorInstance.updateOptions({ fontSize: currentFontSize });
+    currentZoom = DEFAULT_ZOOM;
+    applyZoom();
 }
 
 // 监听键盘事件
@@ -401,4 +406,20 @@ justify-content: flex-end;
     z-index: 1;
     opacity: 0.7;
 }
+
+/* Tab styles */
+.tabs {margin: 0; padding: 0;}
+.tabs ul {list-style: none; margin: 0; padding: 0; height: 100%; vertical-align: middle;}
+.tabs ul li {
+    --li-bg-color: hsl(216,35%,85%);
+    --li-bg-color-lighter: hsl(216,35%,95%);
+    --li-color-lighter: blue;
+    width: 100px; height: 30px; float: left; text-align: center; line-height: 30px; cursor: pointer;
+    vertical-align: middle;
+    user-select: none;
+    box-sizing: border-box;
+}
+.tabs ul li:hover {color: var(--li-color-lighter);}
+.tab-default {background-color: var(--li-bg-color);}
+.tab-selected {background-color: var(--li-bg-color-lighter); color: var(--li-color-lighter); border-top: 2px solid orange;}
 </style>
