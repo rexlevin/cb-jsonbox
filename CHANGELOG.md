@@ -4,6 +4,14 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
+## [0.0.8] - 2026-07-17
+
+### chore | 维护 / Maintenance
+
+升级版本号至 0.0.8，Electron 升级到 42.5.1
+
+Bump version to 0.0.8, upgrade Electron to 42.5.1
+
 ## [0.0.7] - 2026-07-15
 
 ### feat | 新功能 / Features

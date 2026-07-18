@@ -2,7 +2,7 @@
     "name": "cb-jsonbox",
     "id": "com.github.rexlevin.cb-jsonbox",
     "private": true,
-    "version": "0.0.7",
+    "version": "0.0.8",
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
     "author": "rexlevin",
     "license": "Apache-2.0",
@@ -29,7 +29,7 @@
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "^6.0.0",
-        "electron": "^41.2.1",
+        "electron": "^42.5.1",
         "electron-builder": "^26.0.12",
         "typescript": "^5.9.2",
         "vite": "^7.0.0"
