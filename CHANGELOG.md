@@ -4,13 +4,19 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
-## [0.0.8] - 2026-07-17
+## [0.0.8] - 2026-07-18
+
+### feat | 新功能 / Features
+
+添加 .canbox-app 配置文件，声明 APP 类型和 Electron 版本范围，支持 Electron 多版本管理
+
+Add .canbox-app config file declaring app type and Electron version range, supporting Electron multi-version management
 
 ### chore | 维护 / Maintenance
 
-升级版本号至 0.0.8，Electron 升级到 42.5.1
+Electron 从 41.2.1 升级到 42.5.1
 
-Bump version to 0.0.8, upgrade Electron to 42.5.1
+Upgrade Electron from 41.2.1 to 42.5.1
 
 ## [0.0.7] - 2026-07-15
 
