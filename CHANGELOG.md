@@ -4,6 +4,26 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
+## [0.0.9] - 2026-09-22
+
+### feat | 新功能 / Features
+
+持久化保存窗口缩放因子，启动时自动恢复上次设置的缩放比例
+
+Persist window zoom factor across sessions and restore on startup
+
+### fix | 问题修复 / Bug Fixes
+
+锁定 electron 版本为 42.5.1，避免版本范围导致的依赖解析问题
+
+Lock electron version to 42.5.1 to avoid dependency resolution issues from version ranges
+
+### ci | 持续集成 / Continuous Integration
+
+优化CI构建的npm和Electron镜像源选择逻辑，自动选用最快源
+
+Optimize CI build npm and Electron mirror source selection logic to automatically choose the fastest source
+
 ## [0.0.8] - 2026-07-18
 
 ### feat | 新功能 / Features
