@@ -56,6 +56,17 @@ contextBridge.exposeInMainWorld('api', {
     setZoom: (factor) => {
         webFrame.setZoomFactor(factor);
     },
+    getZoom: (callback) => {
+        ipcRenderer.invoke('canbox.store.get', 'winState', 'zoom').then(ret => {
+            callback(ret !== null && ret !== undefined ? ret : null);
+        }).catch(err => {
+            console.error('[cb-jsonbox preload] getZoom 失败: %o', err);
+            callback(null);
+        });
+    },
+    saveZoom: (factor) => {
+        return ipcRenderer.invoke('canbox.store.set', 'winState', 'zoom', factor);
+    },
     openExternal: (url) => {
         shell.openExternal(url);
     }

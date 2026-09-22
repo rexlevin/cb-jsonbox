@@ -61,7 +61,23 @@ function createWindow() {
         const bounds = mainWindow.getBounds();
         winStateStore.set('bounds', bounds);
 
-        // 2. 通过 executeJavaScript 读取渲染进程的 box 数据并保存
+        // 2. 保存 zoom 因子（通过 executeJavaScript 读取渲染进程的当前 zoom 值）
+        const zoomPromise = mainWindow.webContents.executeJavaScript(
+            `window.__currentZoom || 1`
+        );
+        const zoomTimeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('executeJavaScript zoom timeout')), 1000)
+        );
+
+        Promise.race([zoomPromise, zoomTimeoutPromise])
+            .then(zoomFactor => {
+                winStateStore.set('zoom', zoomFactor);
+                console.log('[cb-jsonbox] close: zoom saved:', zoomFactor);
+            }).catch(err => {
+                console.error('[cb-jsonbox] close: save zoom failed:', err.message);
+            });
+
+        // 3. 通过 executeJavaScript 读取渲染进程的 box 数据并保存
         //    加 2 秒超时，防止渲染进程无响应时窗口无法关闭
         const readPromise = mainWindow.webContents.executeJavaScript(
             `window.__boxDataForSave || null`

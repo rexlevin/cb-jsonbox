@@ -72,6 +72,10 @@ let currentZoom = DEFAULT_ZOOM;
 
 function applyZoom() {
     window.api.setZoom(currentZoom);
+    // 同步到全局变量，供主进程关闭时读取
+    window.__currentZoom = currentZoom;
+    // 持久化保存
+    window.api.saveZoom(currentZoom);
 }
 
 function zoomIn() {
@@ -143,6 +147,18 @@ onBeforeMount(() => {
     console.info('box === %o', box);
     if (isGetBoxCalled) return;
     isGetBoxCalled = true;
+
+    // 从存储中读取上次保存的 zoom 值并应用
+    window.api.getZoom(savedZoom => {
+        if (savedZoom !== null && savedZoom >= MIN_ZOOM && savedZoom <= MAX_ZOOM) {
+            currentZoom = savedZoom;
+            applyZoom();
+            console.info('恢复上次 zoom 值:', currentZoom);
+        } else {
+            console.info('使用默认 zoom 值:', currentZoom);
+        }
+    });
+
     // 从存储中查询 boxes 数据
     window.api.getBox(res => {
         console.info('store====res=%o', res);
