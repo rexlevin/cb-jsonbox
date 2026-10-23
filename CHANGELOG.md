@@ -4,6 +4,24 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
+## [0.1.0] - 2026-10-23
+
+### feat | 新功能 / Features
+
+新增标签页切换快捷键：Ctrl+Tab / Ctrl+Shift+Tab、Ctrl+PageDown / Ctrl+PageUp 切换到下一个/上一个标签
+新增标签页排序快捷键：Ctrl+Shift+PageDown / Ctrl+Shift+PageUp 后移/前移当前标签
+设置入口快捷键由 Alt+S 调整为 Ctrl+,，并为设置按钮添加 tooltip 提示
+
+Added tab switching shortcuts: Ctrl+Tab / Ctrl+Shift+Tab and Ctrl+PageDown / Ctrl+PageUp to switch to next/previous tab
+Added tab reordering shortcuts: Ctrl+Shift+PageDown / Ctrl+Shift+PageUp to move current tab backward/forward
+Changed the settings shortcut from Alt+S to Ctrl+, and added a tooltip to the settings button
+
+### build | 构建 / Build
+
+.canbox-app 配置新增 category 字段
+
+Added category field to .canbox-app config
+
 ## [0.0.9] - 2026-09-22
 
 ### feat | 新功能 / Features
