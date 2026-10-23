@@ -43,9 +43,12 @@ function openExternal(url) {
 }
 
 const shortcuts = ref([
-    { key: 'Alt+S', description: '打开设置' },
+    { key: 'Ctrl+,', description: '打开设置' },
     { key: 'Ctrl+T', description: '新建标签页' },
     { key: 'Ctrl+W', description: '关闭当前标签页' },
+    { key: 'Ctrl+Tab / Ctrl+Shift+Tab', description: '切换到下一个/上一个标签' },
+    { key: 'Ctrl+PageDown / Ctrl+PageUp', description: '切换到下一个/上一个标签' },
+    { key: 'Ctrl+Shift+PageDown / Ctrl+Shift+PageUp', description: '当前标签后移/前移一位' },
     { key: 'Ctrl++', description: '放大界面' },
     { key: 'Ctrl+-', description: '缩小界面' },
     { key: 'Ctrl+0', description: '重置缩放' },

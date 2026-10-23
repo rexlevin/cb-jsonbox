@@ -15,7 +15,9 @@
         <footer>
             <div class="bottom">
                 <div class="divSettings">
-                    <span class="icon-span" @click="openSettings"><i class="bi bi-sliders icon"></i></span>
+                    <el-tooltip content="设置 (Ctrl+,)" placement="top">
+                        <span class="icon-span" @click="openSettings"><i class="bi bi-sliders icon"></i></span>
+                    </el-tooltip>
                 </div>
                 <div style="height: 100%;"></div>
                 <div class="btngroup">
@@ -93,7 +95,7 @@ function zoomReset() {
     applyZoom();
 }
 
-// 监听键盘事件
+// 监听键盘事件（使用物理按键 e.code，避免修饰键/输入法状态干扰）
 const handleKeydown = (event) => {
     // 设置弹层打开时，ESC 关闭弹层
     if (showSettings.value && event.key === 'Escape') {
@@ -118,21 +120,41 @@ const handleKeydown = (event) => {
         return;
     }
 
-    const keyActions = {
-        'alt+s': openSettings,
-        'ctrl+t': createTab,
-        'ctrl+w': closeTab
-    };
+    // 设置弹层打开时，不响应其他全局快捷键
+    if (showSettings.value) return;
 
-    const keyCombination = [
-        event.altKey ? 'alt' : '',
-        event.ctrlKey ? 'ctrl' : '',
-        event.key.toLowerCase()
-    ].filter(Boolean).join('+');
+    if (!event.ctrlKey || event.altKey) return;
 
-    const action = keyActions[keyCombination];
-    if (action) {
-        action();
+    const code = event.code;
+
+    // 打开设置：Ctrl+,
+    if (code === 'Comma' && !event.shiftKey) {
+        event.preventDefault();
+        openSettings();
+        return;
+    }
+
+    // 标签页切换：Ctrl+Tab / Ctrl+Shift+Tab、Ctrl+PageDown / Ctrl+PageUp
+    if (code === 'Tab' || code === 'PageDown' || code === 'PageUp') {
+        event.preventDefault();
+        const step = (code === 'Tab' ? event.shiftKey : code === 'PageUp') ? -1 : 1;
+        // Ctrl+Shift+PageUp/PageDown 调整当前标签顺序，不切换激活标签
+        if (event.shiftKey && code !== 'Tab') {
+            moveTab(step);
+        } else {
+            switchRelativeTab(step);
+        }
+        return;
+    }
+
+    if (code === 'KeyT' && !event.shiftKey) {
+        event.preventDefault();
+        createTab();
+        return;
+    }
+    if (code === 'KeyW' && !event.shiftKey) {
+        event.preventDefault();
+        closeTab();
     }
 };
 
@@ -188,7 +210,8 @@ onBeforeMount(() => {
 let editorInstance = ref(null);
 onMounted(() => {
     // 挂载键盘监听
-    window.addEventListener('keydown', handleKeydown);
+    // 捕获阶段监听，避免 Monaco 编辑器拦截 Ctrl+Tab / Ctrl+PageUp 等标签快捷键
+    window.addEventListener('keydown', handleKeydown, true);
     editorInstance = monaco.editor.create(document.querySelector('.editor'), {
         value: '',
         language: 'json',
@@ -250,7 +273,7 @@ onMounted(() => {
 // 组件卸载时解绑事件
 onUnmounted(() => {
     // 移除keydown监听
-    window.removeEventListener('keydown', handleKeydown);
+    window.removeEventListener('keydown', handleKeydown, true);
     // 清理定期保存定时器
     if (periodicSaveTimer) {
         clearInterval(periodicSaveTimer);
@@ -335,6 +358,28 @@ function switchTab(id) {
             break;
         }
     }
+}
+
+// 切换到相对位置的标签（首尾循环）
+function switchRelativeTab(step) {
+    const list = box.value.data;
+    if (list.length < 2) return;
+    const index = list.findIndex(t => t.id === box.value.activeId);
+    if (index === -1) return;
+    const nextIndex = (index + step + list.length) % list.length;
+    switchTab(list[nextIndex].id);
+}
+
+// 调整当前标签在标签栏中的顺序（首尾不循环），不改变激活标签
+function moveTab(step) {
+    const list = box.value.data;
+    if (list.length < 2) return;
+    const index = list.findIndex(t => t.id === box.value.activeId);
+    if (index === -1) return;
+    const targetIndex = index + step;
+    if (targetIndex < 0 || targetIndex >= list.length) return;
+    const [tab] = list.splice(index, 1);
+    list.splice(targetIndex, 0, tab);
 }
 
 function init() {
