@@ -147,7 +147,7 @@ const handleKeydown = (event) => {
         return;
     }
 
-    if (code === 'KeyT' && !event.shiftKey) {
+    if (code === 'KeyN' && !event.shiftKey) {
         event.preventDefault();
         createTab();
         return;

@@ -44,7 +44,7 @@ function openExternal(url) {
 
 const shortcuts = ref([
     { key: 'Ctrl+,', description: '打开设置' },
-    { key: 'Ctrl+T', description: '新建标签页' },
+    { key: 'Ctrl+N', description: '新建标签页' },
     { key: 'Ctrl+W', description: '关闭当前标签页' },
     { key: 'Ctrl+Tab / Ctrl+Shift+Tab', description: '切换到下一个/上一个标签' },
     { key: 'Ctrl+PageDown / Ctrl+PageUp', description: '切换到下一个/上一个标签' },

@@ -27,7 +27,7 @@ JSONBox is designed for developers who frequently work with JSON, addressing the
 - **Format Conversion** — Supports JSON ↔ YAML and JSON ↔ XML quick conversion, no more online tools.
 - **Multi-tab Management** — Open multiple JSON documents simultaneously, switch freely between tabs, content auto-saved.
 - **Session Recovery** — Automatically remembers tabs, content, and window position after closing, seamlessly resumes on next launch.
-- **Keyboard Shortcuts** — Built-in shortcuts like Ctrl+T for new tab, Ctrl+W to close current tab, and more.
+- **Keyboard Shortcuts** — Built-in shortcuts like Ctrl+N for new tab, Ctrl+W to close current tab, and more.
 
 ### Key Features
 
@@ -120,7 +120,7 @@ A left-side menu with right-side content layout, including general settings, key
 ### Quick Start
 
 1. **Launch the App** — Click the JSONBox icon on the Canbox home screen.
-2. **Create a Tab** — Press `Ctrl+T` to create a new tab, then input or paste JSON content in the editor.
+2. **Create a Tab** — Press `Ctrl+N` to create a new tab, then input or paste JSON content in the editor.
 3. **Format JSON** — Use the toolbar button or shortcut to format in one click.
 4. **Format Conversion** — Use the toolbar menu to convert JSON to YAML or XML and copy.
 5. **Search & Replace** — Press `Ctrl+F` to open the search panel, enter keywords to search or replace.
@@ -129,7 +129,7 @@ A left-side menu with right-side content layout, including general settings, key
 
 | Shortcut   | Function           |
 | ---------- | ------------------ |
-| `Ctrl+T` | New tab            |
+| `Ctrl+N` | New tab            |
 | `Ctrl+W` | Close current tab  |
 
 > For more shortcuts, check "Settings → Keyboard Shortcuts" within the app.
