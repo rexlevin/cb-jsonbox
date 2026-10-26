@@ -1,9 +1,9 @@
 /*!
- * 2022-10-20 by lizl6
+ * 2022-10-20 by rexlevin
  * MIT License
  *
  * json转yaml工具
- * 
+ *
  * import * as yaml from "json.yaml";
  * yaml.j2y(obj);
  */
