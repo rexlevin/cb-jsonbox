@@ -1,5 +1,6 @@
 {
     "name": "cb-jsonbox",
+    "displayName": "JsonBox",
     "id": "com.github.rexlevin.cb-jsonbox",
     "private": true,
     "version": "0.1.1",
