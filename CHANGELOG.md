@@ -4,6 +4,30 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
+## [0.1.1] - 2026-10-27
+
+### docs | 文档 / Documentation
+
+更新 json.yaml.js 文件的作者信息
+
+Updated author information in json.yaml.js
+
+### refactor | 重构 / Refactoring
+
+新建标签页快捷键由 Ctrl+T 改为 Ctrl+N
+
+Changed the new tab shortcut from Ctrl+T to Ctrl+N
+
+### build | 构建 / Build
+
+调整依赖分类：渲染层依赖（monaco-editor、vue、element-plus 等）移入 devDependencies，仅保留 nanoid 作为运行时依赖
+发布包体积显著减小：app.asar 由约 156MB 降至约 6.5MB，发布 zip 由约 33MB 降至约 2.4MB
+package.json 新增 displayName 字段
+
+Adjusted dependency classification: moved renderer dependencies (monaco-editor, vue, element-plus, etc.) to devDependencies, keeping only nanoid as a runtime dependency
+Significantly reduced release package size: app.asar from ~156MB to ~6.5MB, release zip from ~33MB to ~2.4MB
+Added displayName field to package.json
+
 ## [0.1.0] - 2026-10-23
 
 ### feat | 新功能 / Features
