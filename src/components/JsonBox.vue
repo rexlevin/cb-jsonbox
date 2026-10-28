@@ -34,6 +34,7 @@
 
 <script setup>
 import * as monaco from 'monaco-editor';
+import { ElNotification } from 'element-plus';
 import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -419,10 +420,21 @@ function copy(name) {
     // console.info(re);
     navigator.clipboard.writeText(re).then(() => {
         console.info(`${name}格式内容复制成功`);
-        window.api.notification('复制成功', {body: `${name}格式内容已经复制到剪贴板`});
+        ElNotification.success({
+            title: '复制成功',
+            message: `${name}格式内容已经复制到剪贴板`,
+            position: 'top-right',
+            duration: 3000
+        });
     }).catch((err) => {
         console.error(err);
-        window.api.notification('复制失败', {body: `${name}格式内容复制失败`});
+        ElNotification.error({
+            title: '复制失败',
+            message: `${name}格式内容复制失败`,
+            position: 'top-right',
+            duration: 0,
+            showClose: true
+        });
     });
 }
 </script>

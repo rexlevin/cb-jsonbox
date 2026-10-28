@@ -77,7 +77,7 @@ Select the JSON content you want to format, and use the toolbar button to beauti
 
 ### Format Conversion
 
-Convert JSON content to YAML or XML format. The converted result is automatically copied to the clipboard, with a system notification to confirm.
+Convert JSON content to YAML or XML format. The converted result is automatically copied to the clipboard, with an in-app notification to confirm.
 
 ![to_yaml.png](./public/screenshots/to_yaml.png)
 

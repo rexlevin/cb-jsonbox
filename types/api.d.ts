@@ -4,13 +4,6 @@ declare global {
     interface Window {
         api: {
             /**
-             * 发送系统通知
-             * @param title - 通知标题
-             * @param opt - 通知选项（body 为正文）
-             */
-            notification: (title: string, opt?: { body?: string }) => void;
-
-            /**
              * 保存会话数据（JSON 字符串）
              * @param box - JSON.stringify 后的会话数据
              * @returns Promise<void>

@@ -77,7 +77,7 @@ JSONBox 是 Canbox 生态中的 JSON 处理小应用，专为开发者设计。
 
 ### 格式互转
 
-支持将 JSON 内容转换为 YAML 或 XML 格式，转换结果自动复制到剪贴板，并提供系统通知确认。
+支持将 JSON 内容转换为 YAML 或 XML 格式，转换结果自动复制到剪贴板，并提供应用内通知确认。
 
 ![to_yaml.png](./public/screenshots/to_yaml.png)
 
