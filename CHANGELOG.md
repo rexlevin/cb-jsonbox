@@ -4,6 +4,32 @@
 
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/)。
 
+## [0.1.2] - 2026-10-28
+
+### feat | 新功能 / Features
+
+底栏新增排序按钮，支持原始、key 升序、key 降序三态循环，图标与提示随状态变化
+排序递归作用于嵌套对象，数组顺序不变，并保留原文缩进与单行紧凑格式
+排序状态按标签页独立保存，关闭 APP 后重新打开按上次状态显示
+空内容或非法 JSON 时给出提示，不改变当前排序状态
+
+Added a footer sort button cycling through original, key ascending, and key descending states with state-specific icon and tooltip
+Sorting applies recursively to nested objects while preserving array order, indentation, and compact single-line format
+Each tab keeps its own sort state, restored on next launch
+Shows a notice for empty or invalid JSON without changing the current sort state
+
+### refactor | 重构 / Refactoring
+
+将系统原生通知替换为应用内通知，移除主进程与预加载脚本中的原生通知代码
+
+Replaced native system notifications with in-app notifications and removed native notification code from main and preload scripts
+
+### build | 构建 / Build
+
+版本号更新至 0.1.2
+
+Bumped version to 0.1.2
+
 ## [0.1.1] - 2026-10-27
 
 ### docs | 文档 / Documentation
