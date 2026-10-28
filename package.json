@@ -3,7 +3,7 @@
     "displayName": "JsonBox",
     "id": "com.github.rexlevin.cb-jsonbox",
     "private": true,
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "JsonBox - 跨平台的 JSON 格式化工具",
     "author": "rexlevin",
     "license": "Apache-2.0",
