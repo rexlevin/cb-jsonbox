@@ -22,6 +22,7 @@
                 <div style="height: 100%;"></div>
                 <div class="btngroup">
                     <!-- <span class="icon-span" title="格式化 shift+alt+f"><i class="bi bi-braces icon"></i></span> -->
+                    <span class="icon-span" @click="cycleSort" :title="sortMeta.tip"><i class="bi icon" :class="sortMeta.icon"></i></span>
                     <span class="icon-span" @click="copy('minify')" title="复制压缩"><i class="bi bi-chevron-contract icon"></i></span>
                     <span class="icon-span" @click="copy('yaml')" title="复制为yaml"><i class="bi bi-filetype-yml icon"></i></span>
                     <span class="icon-span" @click="copy('xml')" title="复制为xml"><i class="bi bi-code-slash icon"></i></span>
@@ -35,7 +36,7 @@
 <script setup>
 import * as monaco from 'monaco-editor';
 import { ElNotification } from 'element-plus';
-import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
+import { onBeforeMount, onMounted, onUnmounted, ref, computed } from 'vue';
 import { debounce } from 'lodash-es';
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -51,7 +52,8 @@ const tmpJ = {
     type: 0,    // 当前 json 类型，0-会话，1-文件
     title: "",
     path: '',
-    content: ''
+    content: '',
+    sortMode: 0    // 排序状态，0-原始，1-key 升序，2-key 降序（每个标签独立）
 };
 const tmpBox = {
     activeId: '',
@@ -61,6 +63,19 @@ const tmpBox = {
 
 const box = ref({ data: [] });
 const showSettings = ref(false);
+
+// 排序状态对应的图标与提示
+const SORT_MODES = [
+    { icon: 'bi-arrow-down-up', tip: '排序：原始（点击切换为 key 升序）' },
+    { icon: 'bi-sort-alpha-down', tip: '排序：key 升序（点击切换为 key 降序）' },
+    { icon: 'bi-sort-alpha-down-alt', tip: '排序：key 降序（点击恢复原始）' }
+];
+
+// 当前激活标签的排序状态（每个标签独立）
+const sortMeta = computed(() => {
+    const tab = box.value.data.find(t => t.id === box.value.activeId);
+    return SORT_MODES[(tab && tab.sortMode) || 0];
+});
 
 // 定期兜底保存相关
 let periodicSaveTimer = null;
@@ -209,6 +224,8 @@ onBeforeMount(() => {
 });
 
 let editorInstance = ref(null);
+// 程序化写入排序视图时置为 true，避免把派生文本回写为标签原始内容
+let isApplyingSort = false;
 onMounted(() => {
     // 挂载键盘监听
     // 捕获阶段监听，避免 Monaco 编辑器拦截 Ctrl+Tab / Ctrl+PageUp 等标签快捷键
@@ -250,6 +267,8 @@ onMounted(() => {
     }, { deep: true, flush: 'sync' });
 
     editorInstance.onDidChangeModelContent(() => {
+        // 排序视图是派生文本，程序化写入时不回写原始内容
+        if (isApplyingSort) return;
         // 不再依赖 isUserModified 标志区分用户输入与程序设置：
         // setValue 设置的就是 activeTab.content，写回相同值不会触发 watch（字符串相等），
         // 因此直接同步 editor 内容到 activeTab 即可，避免标志时序竞态导致用户输入丢失
@@ -319,6 +338,7 @@ function closeTab() {
         }
         box.value.data[0].title = 'NewTab 0';
         box.value.data[0].content = '';
+        box.value.data[0].sortMode = 0;
         editorInstance.setValue('');
         console.info('关闭后只剩下一个空白页了');
         return;
@@ -333,7 +353,7 @@ function closeTab() {
                 nextId = i - 1;
             }
             box.value.activeId = box.value.data[nextId].id;
-            editorInstance.setValue(box.value.data[nextId].content);
+            renderActive();
             box.value.data.splice(i, 1);
             break;
         }
@@ -345,19 +365,16 @@ function switchTab(id) {
     let currentId = box.value.activeId;
     console.info('currentId==%s\nnewId====%s', currentId, id);
     console.info('box.value.data=====%o', box.value.data);
-    for(let t of box.value.data) {
-        if(t.id === currentId) {
-            t.content = editorInstance.getValue();
-            break;
-        }
+    const currentTab = box.value.data.find(t => t.id === currentId);
+    // 排序视图为派生文本，不回写原始内容；用户编辑已由 onDidChangeModelContent 实时同步
+    if (currentTab && (currentTab.sortMode || 0) === 0) {
+        currentTab.content = editorInstance.getValue();
     }
-    for(let t of box.value.data) {
-        if(t.id === id) {
-            box.value.activeId = t.id;
-            editorInstance.setValue(t.content);
-            t.content && hidePlaceholder();
-            break;
-        }
+    const target = box.value.data.find(t => t.id === id);
+    if (target) {
+        box.value.activeId = target.id;
+        renderActive();
+        editorInstance.getValue() && hidePlaceholder();
     }
 }
 
@@ -383,11 +400,101 @@ function moveTab(step) {
     list.splice(targetIndex, 0, tab);
 }
 
+// 递归按 key 排序：数组保持元素顺序，仅对元素内部对象排序
+function sortValue(value, dir) {
+    if (Array.isArray(value)) {
+        return value.map(item => sortValue(item, dir));
+    }
+    if (value !== null && typeof value === 'object') {
+        const keys = Object.keys(value).sort((a, b) => {
+            const r = a < b ? -1 : (a > b ? 1 : 0);
+            return dir === 2 ? -r : r;
+        });
+        const result = {};
+        for (const key of keys) {
+            result[key] = sortValue(value[key], dir);
+        }
+        return result;
+    }
+    return value;
+}
+
+// 排序并序列化：单行保持紧凑，多行沿用原文缩进（默认 2 空格），保留末尾换行；非法 JSON 会抛出异常
+function sortJsonText(text, dir) {
+    const sorted = sortValue(JSON.parse(text), dir);
+    const body = text.replace(/\s+$/, '');
+    let output;
+    if (body.includes('\n')) {
+        const indentMatch = body.match(/\n([ \t]+)"/);
+        output = JSON.stringify(sorted, null, indentMatch ? indentMatch[1] : '  ');
+    } else {
+        output = JSON.stringify(sorted);
+    }
+    return text.endsWith('\n') ? output + '\n' : output;
+}
+
+// 根据标签自己的排序状态生成显示文本
+function getDisplayContent(tab) {
+    if (!tab) return '';
+    const mode = tab.sortMode || 0;
+    if (mode === 0 || tab.content.trim() === '') {
+        return tab.content;
+    }
+    try {
+        return sortJsonText(tab.content, mode);
+    } catch (err) {
+        // 存量内容可能不是合法 JSON，降级为原始内容，避免启动或切换标签时报错
+        return tab.content;
+    }
+}
+
+// 按当前激活标签的排序状态重新渲染编辑器内容
+function renderActive() {
+    const text = getDisplayContent(box.value.data.find(t => t.id === box.value.activeId));
+    isApplyingSort = true;
+    editorInstance.setValue(text);
+    isApplyingSort = false;
+}
+
+// 排序按钮：原始 -> key 升序 -> key 降序 -> 原始（仅作用于当前标签）
+function cycleSort() {
+    const tab = box.value.data.find(t => t.id === box.value.activeId);
+    if (!tab) return;
+    const text = editorInstance.getValue();
+    if (text.trim() === '') {
+        ElNotification.info({
+            title: '排序',
+            message: '当前无内容',
+            position: 'top-right',
+            duration: 3000
+        });
+        return;
+    }
+    try {
+        JSON.parse(text);
+    } catch (err) {
+        // 排序状态下内容被编辑成非法 JSON 时，切回原始，避免无法退出排序状态
+        const wasSorted = (tab.sortMode || 0) !== 0;
+        tab.sortMode = 0;
+        if (wasSorted) renderActive();
+        ElNotification.error({
+            title: '排序失败',
+            message: wasSorted ? '当前内容不是合法 JSON，已切回原始' : '当前内容不是合法 JSON，无法排序',
+            position: 'top-right',
+            duration: 0,
+            showClose: true
+        });
+        return;
+    }
+    tab.sortMode = ((tab.sortMode || 0) + 1) % 3;
+    renderActive();
+}
+
 function init() {
     const target = box.value.data.find(t => t.id === box.value.activeId);
     if (target) {
-        editorInstance.setValue(target.content);
-        if (target.content !== '') hidePlaceholder();
+        renderActive();
+        if (editorInstance.getValue() !== '') hidePlaceholder();
     }
 }
 
