@@ -49,6 +49,9 @@
         ],
         "linux": {
             "target": ["dir"]
+        },
+        "win": {
+            "target": ["dir"]
         }
     }
 }
